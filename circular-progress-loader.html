@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circular Progress Animation 40-100%</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ing-orange: #FF6200;
+            --ing-navy: #1F1F5F;
+            --glow-orange: rgba(255, 98, 0, 0.4);
+            --glow-navy: rgba(31, 31, 95, 0.3);
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f2e 0%, #1a1a3e 100%);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            user-select: none;
+            color: #ffffff;
+        }
+
+        /* --- CIRCULAR PROGRESS --- */
+        .circle-container {
+            position: relative;
+            width: clamp(300px, 40vw, 500px);
+            height: clamp(300px, 40vw, 500px);
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 20;
+        }
+
+        .circle-progress {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 20;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 15px var(--glow-orange));
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+
+        /* Pulsujący efekt wewnętrznego koła */
+        .inner-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--glow-orange) 0%, transparent 70%);
+            opacity: 0.3;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.5; }
+        }
+
+        /* --- LICZNIK --- */
+        .center-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .hero-number {
+            font-size: clamp(4rem, 10vw, 8rem);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            background: linear-gradient(to bottom, #ffffff 40%, #c7d2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-variant-numeric: tabular-nums;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+        }
+
+        .hero-number.success {
+            background: linear-gradient(to bottom, #FF6200 20%, #FFB885 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px var(--glow-orange));
+            animation: number-glow 1s ease-out;
+        }
+
+        @keyframes number-glow {
+            0%, 100% { filter: drop-shadow(0 0 30px var(--glow-orange)); }
+            50% { filter: drop-shadow(0 0 50px var(--glow-orange)); }
+        }
+
+        /* --- PROMIENIE ŚWIETLNE --- */
+        .rays-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .ray {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(to bottom, var(--ing-orange), transparent);
+            transform-origin: center top;
+            opacity: 0;
+        }
+
+        /* --- PARTICLE BURST --- */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--ing-orange);
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 10px var(--glow-orange);
+        }
+
+        /* --- RING WAVES --- */
+        .ring-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid var(--ing-orange);
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        /* --- START OVERLAY --- */
+        .start-overlay {
+            color: rgba(255, 255, 255, 0.6);
+            transition: opacity 0.5s;
+        }
+
+        /* --- SUCCESS STATE --- */
+        .success-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 110%;
+            height: 110%;
+            border: 3px solid var(--ing-orange);
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 40px var(--glow-orange);
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col items-center justify-center relative" onclick="startAnimation()">
+
+    <div class="w-full max-w-6xl px-6 text-center flex flex-col items-center gap-8 relative z-20">
+
+        <div class="space-y-2">
+            <h2 class="text-orange-500 font-bold tracking-[0.3em] uppercase text-sm md:text-base">Raport Roczny</h2>
+            <h1 class="text-3xl md:text-5xl text-white font-bold tracking-tight">Wzrost Efektywności</h1>
+        </div>
+
+        <div class="circle-container">
+            <!-- Wewnętrzny blask -->
+            <div class="inner-glow"></div>
+
+            <!-- SVG Circular Progress -->
+            <svg class="w-full h-full" viewBox="0 0 200 200">
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FF6200;stop-opacity:1" />
+                        <stop offset="50%" style="stop-color:#FF8F33;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#FFB885;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Tło koła -->
+                <circle class="circle-bg" cx="100" cy="100" r="85"></circle>
+
+                <!-- Postęp -->
+                <circle
+                    id="progress-circle"
+                    class="circle-progress"
+                    cx="100"
+                    cy="100"
+                    r="85"
+                    stroke-dasharray="534.07"
+                    stroke-dashoffset="320.44"
+                ></circle>
+            </svg>
+
+            <!-- Zawartość środkowa -->
+            <div class="center-content">
+                <div class="flex items-baseline justify-center">
+                    <span id="counter" class="hero-number">40</span>
+                    <span class="text-3xl md:text-5xl font-bold text-orange-500 ml-1">%</span>
+                </div>
+                <p class="mt-2 text-sm md:text-base text-gray-400 tracking-wide">Q1 → Q4 2024</p>
+            </div>
+
+            <!-- Success ring -->
+            <div id="success-ring" class="success-ring"></div>
+
+            <!-- Promienie -->
+            <div id="rays" class="rays-container"></div>
+        </div>
+
+        <div id="final-label" class="opacity-0 transition-all duration-1000 text-orange-500 font-bold text-lg md:text-xl tracking-wider uppercase transform translate-y-4">
+            ⚡ Cel Osiągnięty ⚡
+        </div>
+    </div>
+
+    <div id="start-msg" class="start-overlay absolute bottom-10 text-sm uppercase tracking-widest animate-pulse cursor-pointer z-50">
+        Kliknij, aby uruchomić
+    </div>
+
+    <div id="particles" class="absolute inset-0 pointer-events-none z-30 overflow-hidden"></div>
+
+    <script>
+        let isAnimating = false;
+        let animationFinished = false;
+
+        const counter = document.getElementById('counter');
+        const progressCircle = document.getElementById('progress-circle');
+        const finalLabel = document.getElementById('final-label');
+        const startMsg = document.getElementById('start-msg');
+        const successRing = document.getElementById('success-ring');
+
+        // Obliczenia dla circular progress
+        const radius = 85;
+        const circumference = 2 * Math.PI * radius; // ~534.07
+
+        // Konfiguracja
+        const CONFIG = {
+            startVal: 40,
+            endVal: 100,
+            duration: 2500,
+            easing: (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t)
+        };
+
+        function getStrokeDashoffset(percentage) {
+            return circumference - (percentage / 100) * circumference;
+        }
+
+        function startAnimation() {
+            if (isAnimating || animationFinished) return;
+
+            isAnimating = true;
+            startMsg.style.opacity = '0';
+
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / CONFIG.duration, 1);
+                const easedProgress = CONFIG.easing(progress);
+
+                const currentVal = CONFIG.startVal + (easedProgress * (CONFIG.endVal - CONFIG.startVal));
+
+                // Aktualizacja circular progress
+                progressCircle.style.strokeDashoffset = getStrokeDashoffset(currentVal);
+                counter.innerText = Math.floor(currentVal);
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    finishAnimation();
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        function finishAnimation() {
+            isAnimating = false;
+            animationFinished = true;
+
+            counter.innerText = "100";
+            counter.classList.add('success');
+
+            finalLabel.classList.remove('opacity-0', 'translate-y-4');
+
+            // Success ring animation
+            successRing.style.transition = 'all 0.8s ease-out';
+            successRing.style.opacity = '1';
+            successRing.style.width = '120%';
+            successRing.style.height = '120%';
+            setTimeout(() => {
+                successRing.style.opacity = '0';
+            }, 800);
+
+            // Burst effects
+            setTimeout(() => {
+                spawnRays();
+                spawnParticleBurst();
+                spawnRingWaves();
+            }, 100);
+        }
+
+        // Promienie świetlne
+        function spawnRays() {
+            const container = document.getElementById('rays');
+            const rayCount = 12;
+
+            for (let i = 0; i < rayCount; i++) {
+                const ray = document.createElement('div');
+                ray.classList.add('ray');
+                const angle = (360 / rayCount) * i;
+                ray.style.transform = `rotate(${angle}deg)`;
+                container.appendChild(ray);
+
+                // Animacja promienia
+                setTimeout(() => {
+                    ray.style.transition = 'height 0.6s ease-out, opacity 0.6s ease-out';
+                    ray.style.height = '150px';
+                    ray.style.opacity = '0.8';
+
+                    setTimeout(() => {
+                        ray.style.opacity = '0';
+                        setTimeout(() => ray.remove(), 600);
+                    }, 400);
+                }, i * 30);
+            }
+        }
+
+        // Cząsteczki wybuchające
+        function spawnParticleBurst() {
+            const container = document.getElementById('particles');
+            const particleCount = 40;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+
+                const angle = (Math.PI * 2 / particleCount) * i;
+                const velocity = 3 + Math.random() * 2;
+
+                particle.style.left = `${centerX}px`;
+                particle.style.top = `${centerY}px`;
+                container.appendChild(particle);
+
+                let distance = 0;
+                let opacity = 1;
+
+                const animate = () => {
+                    distance += velocity;
+                    opacity -= 0.015;
+
+                    const x = Math.cos(angle) * distance;
+                    const y = Math.sin(angle) * distance;
+
+                    particle.style.transform = `translate(${x}px, ${y}px)`;
+                    particle.style.opacity = opacity;
+
+                    if (opacity > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        particle.remove();
+                    }
+                };
+
+                setTimeout(() => {
+                    requestAnimationFrame(animate);
+                }, i * 10);
+            }
+        }
+
+        // Fale pierścieniowe
+        function spawnRingWaves() {
+            const container = document.getElementById('particles');
+            const waveCount = 3;
+
+            for (let i = 0; i < waveCount; i++) {
+                const wave = document.createElement('div');
+                wave.classList.add('ring-wave');
+                wave.style.width = '100px';
+                wave.style.height = '100px';
+                container.appendChild(wave);
+
+                setTimeout(() => {
+                    wave.style.transition = 'all 1.5s ease-out';
+                    wave.style.width = '600px';
+                    wave.style.height = '600px';
+                    wave.style.opacity = '0.6';
+
+                    setTimeout(() => {
+                        wave.style.opacity = '0';
+                        setTimeout(() => wave.remove(), 1500);
+                    }, 100);
+                }, i * 200);
+            }
+        }
+    </script>
+</body>
+</html>
