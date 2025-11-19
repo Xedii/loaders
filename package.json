@@ -1,0 +1,46 @@
+{
+  "name": "@ing/design-tokens",
+  "version": "1.0.0",
+  "description": "Kompletny system design tokens dla ING Bank - kolory, typografia, spacing, komponenty w stylu ING",
+  "main": "tokens/tokens.js",
+  "types": "tokens/tokens.d.ts",
+  "style": "tokens/tokens.css",
+  "exports": {
+    ".": {
+      "import": "./tokens/tokens.js",
+      "require": "./tokens/tokens.js",
+      "types": "./tokens/tokens.d.ts"
+    },
+    "./css": "./tokens/tokens.css",
+    "./colors": "./tokens/colors.json",
+    "./typography": "./tokens/typography.json",
+    "./spacing": "./tokens/spacing.json",
+    "./components": "./tokens/components.json"
+  },
+  "files": [
+    "tokens/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "design-tokens",
+    "design-system",
+    "ing",
+    "ing-bank",
+    "css-variables",
+    "tokens",
+    "ui",
+    "styling",
+    "theme",
+    "branding"
+  ],
+  "author": "ING Bank",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Xedii/loaders"
+  },
+  "bugs": {
+    "url": "https://github.com/Xedii/loaders/issues"
+  }
+}

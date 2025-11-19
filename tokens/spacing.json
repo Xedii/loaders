@@ -1,0 +1,462 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ING Bank Design Tokens - Spacing & Layout",
+  "description": "System odstępów i layoutu dla aplikacji ING",
+  "spacing": {
+    "scale": {
+      "0": {
+        "value": "0",
+        "pixel": "0px",
+        "type": "spacing",
+        "description": "Brak odstępu"
+      },
+      "1": {
+        "value": "0.25rem",
+        "pixel": "4px",
+        "type": "spacing",
+        "description": "Minimalny odstęp",
+        "usage": "Drobne szczegóły, ikony"
+      },
+      "2": {
+        "value": "0.5rem",
+        "pixel": "8px",
+        "type": "spacing",
+        "description": "Bardzo mały odstęp",
+        "usage": "Wewnętrzne paddingi, małe elementy"
+      },
+      "3": {
+        "value": "0.75rem",
+        "pixel": "12px",
+        "type": "spacing",
+        "description": "Mały odstęp",
+        "usage": "Padding małych komponentów"
+      },
+      "4": {
+        "value": "1rem",
+        "pixel": "16px",
+        "type": "spacing",
+        "description": "Podstawowy odstęp",
+        "usage": "Standard spacing, podstawowe paddingi"
+      },
+      "5": {
+        "value": "1.25rem",
+        "pixel": "20px",
+        "type": "spacing",
+        "description": "Średni odstęp",
+        "usage": "Paddingi kart, komponentów"
+      },
+      "6": {
+        "value": "1.5rem",
+        "pixel": "24px",
+        "type": "spacing",
+        "description": "Duży odstęp",
+        "usage": "Odstępy między sekcjami, karty"
+      },
+      "8": {
+        "value": "2rem",
+        "pixel": "32px",
+        "type": "spacing",
+        "description": "Bardzo duży odstęp",
+        "usage": "Odstępy między większymi sekcjami"
+      },
+      "10": {
+        "value": "2.5rem",
+        "pixel": "40px",
+        "type": "spacing",
+        "description": "Extra duży odstęp",
+        "usage": "Duże paddingi sekcji"
+      },
+      "12": {
+        "value": "3rem",
+        "pixel": "48px",
+        "type": "spacing",
+        "description": "Ogromny odstęp",
+        "usage": "Główne sekcje strony"
+      },
+      "16": {
+        "value": "4rem",
+        "pixel": "64px",
+        "type": "spacing",
+        "description": "Bardzo ogromny odstęp",
+        "usage": "Hero sections, główne separacje"
+      },
+      "20": {
+        "value": "5rem",
+        "pixel": "80px",
+        "type": "spacing",
+        "description": "Maksymalny odstęp",
+        "usage": "Landing pages, specjalne sekcje"
+      },
+      "24": {
+        "value": "6rem",
+        "pixel": "96px",
+        "type": "spacing",
+        "description": "Ultra duży odstęp",
+        "usage": "Marketing pages"
+      },
+      "32": {
+        "value": "8rem",
+        "pixel": "128px",
+        "type": "spacing",
+        "description": "Ekstra odstęp",
+        "usage": "Specjalne przypadki"
+      }
+    },
+    "semantic": {
+      "component": {
+        "paddingXs": {
+          "value": "0.5rem",
+          "description": "Extra small padding dla komponentów"
+        },
+        "paddingSm": {
+          "value": "0.75rem",
+          "description": "Small padding dla komponentów"
+        },
+        "paddingMd": {
+          "value": "1rem",
+          "description": "Medium padding dla komponentów"
+        },
+        "paddingLg": {
+          "value": "1.5rem",
+          "description": "Large padding dla komponentów"
+        },
+        "paddingXl": {
+          "value": "2rem",
+          "description": "Extra large padding dla komponentów"
+        }
+      },
+      "section": {
+        "paddingSm": {
+          "value": "2rem",
+          "description": "Small padding dla sekcji"
+        },
+        "paddingMd": {
+          "value": "3rem",
+          "description": "Medium padding dla sekcji"
+        },
+        "paddingLg": {
+          "value": "4rem",
+          "description": "Large padding dla sekcji"
+        },
+        "paddingXl": {
+          "value": "6rem",
+          "description": "Extra large padding dla sekcji"
+        }
+      },
+      "gap": {
+        "xs": {
+          "value": "0.5rem",
+          "description": "Extra small gap między elementami"
+        },
+        "sm": {
+          "value": "1rem",
+          "description": "Small gap między elementami"
+        },
+        "md": {
+          "value": "1.5rem",
+          "description": "Medium gap między elementami"
+        },
+        "lg": {
+          "value": "2rem",
+          "description": "Large gap między elementami"
+        },
+        "xl": {
+          "value": "3rem",
+          "description": "Extra large gap między elementami"
+        }
+      }
+    }
+  },
+  "layout": {
+    "container": {
+      "xs": {
+        "value": "480px",
+        "type": "maxWidth",
+        "description": "Extra small container",
+        "usage": "Mobile, małe formularze"
+      },
+      "sm": {
+        "value": "640px",
+        "type": "maxWidth",
+        "description": "Small container",
+        "usage": "Tablet portrait, formularze"
+      },
+      "md": {
+        "value": "768px",
+        "type": "maxWidth",
+        "description": "Medium container",
+        "usage": "Tablet landscape"
+      },
+      "lg": {
+        "value": "1024px",
+        "type": "maxWidth",
+        "description": "Large container",
+        "usage": "Desktop, główna zawartość"
+      },
+      "xl": {
+        "value": "1280px",
+        "type": "maxWidth",
+        "description": "Extra large container",
+        "usage": "Duże desktopy"
+      },
+      "2xl": {
+        "value": "1536px",
+        "type": "maxWidth",
+        "description": "2X large container",
+        "usage": "Bardzo duże ekrany"
+      },
+      "full": {
+        "value": "100%",
+        "type": "maxWidth",
+        "description": "Full width container"
+      }
+    },
+    "breakpoints": {
+      "xs": {
+        "value": "0px",
+        "type": "breakpoint",
+        "description": "Extra small devices (phones)",
+        "media": "(min-width: 0px)"
+      },
+      "sm": {
+        "value": "640px",
+        "type": "breakpoint",
+        "description": "Small devices (large phones, small tablets)",
+        "media": "(min-width: 640px)"
+      },
+      "md": {
+        "value": "768px",
+        "type": "breakpoint",
+        "description": "Medium devices (tablets)",
+        "media": "(min-width: 768px)"
+      },
+      "lg": {
+        "value": "1024px",
+        "type": "breakpoint",
+        "description": "Large devices (desktops)",
+        "media": "(min-width: 1024px)"
+      },
+      "xl": {
+        "value": "1280px",
+        "type": "breakpoint",
+        "description": "Extra large devices (large desktops)",
+        "media": "(min-width: 1280px)"
+      },
+      "2xl": {
+        "value": "1536px",
+        "type": "breakpoint",
+        "description": "2X large devices (extra large desktops)",
+        "media": "(min-width: 1536px)"
+      }
+    },
+    "grid": {
+      "columns": {
+        "value": "12",
+        "type": "number",
+        "description": "Liczba kolumn w siatce"
+      },
+      "gutter": {
+        "mobile": {
+          "value": "1rem",
+          "description": "Odstęp między kolumnami na mobile"
+        },
+        "tablet": {
+          "value": "1.5rem",
+          "description": "Odstęp między kolumnami na tablet"
+        },
+        "desktop": {
+          "value": "2rem",
+          "description": "Odstęp między kolumnami na desktop"
+        }
+      }
+    }
+  },
+  "borderRadius": {
+    "none": {
+      "value": "0",
+      "type": "borderRadius",
+      "description": "Brak zaokrąglenia"
+    },
+    "sm": {
+      "value": "0.125rem",
+      "pixel": "2px",
+      "type": "borderRadius",
+      "description": "Małe zaokrąglenie",
+      "usage": "Subtlne zaokrąglenia"
+    },
+    "base": {
+      "value": "0.25rem",
+      "pixel": "4px",
+      "type": "borderRadius",
+      "description": "Podstawowe zaokrąglenie",
+      "usage": "Przyciski, inputy, karty"
+    },
+    "md": {
+      "value": "0.375rem",
+      "pixel": "6px",
+      "type": "borderRadius",
+      "description": "Średnie zaokrąglenie",
+      "usage": "Większe komponenty"
+    },
+    "lg": {
+      "value": "0.5rem",
+      "pixel": "8px",
+      "type": "borderRadius",
+      "description": "Duże zaokrąglenie",
+      "usage": "Karty, modalne"
+    },
+    "xl": {
+      "value": "0.75rem",
+      "pixel": "12px",
+      "type": "borderRadius",
+      "description": "Extra duże zaokrąglenie",
+      "usage": "Specjalne karty"
+    },
+    "2xl": {
+      "value": "1rem",
+      "pixel": "16px",
+      "type": "borderRadius",
+      "description": "2X duże zaokrąglenie",
+      "usage": "Hero cards"
+    },
+    "full": {
+      "value": "9999px",
+      "type": "borderRadius",
+      "description": "Pełne zaokrąglenie",
+      "usage": "Pills, badges, circular avatars"
+    }
+  },
+  "borderWidth": {
+    "none": {
+      "value": "0",
+      "type": "borderWidth",
+      "description": "Brak ramki"
+    },
+    "thin": {
+      "value": "1px",
+      "type": "borderWidth",
+      "description": "Cienka ramka",
+      "usage": "Domyślne ramki, separatory"
+    },
+    "medium": {
+      "value": "2px",
+      "type": "borderWidth",
+      "description": "Średnia ramka",
+      "usage": "Focus states, wyróżnienia"
+    },
+    "thick": {
+      "value": "4px",
+      "type": "borderWidth",
+      "description": "Gruba ramka",
+      "usage": "Strong emphasis, errors"
+    }
+  },
+  "shadows": {
+    "none": {
+      "value": "none",
+      "type": "boxShadow",
+      "description": "Brak cienia"
+    },
+    "xs": {
+      "value": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+      "type": "boxShadow",
+      "description": "Extra small shadow",
+      "usage": "Subtlne podniesienie"
+    },
+    "sm": {
+      "value": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+      "type": "boxShadow",
+      "description": "Small shadow",
+      "usage": "Małe karty, buttony"
+    },
+    "base": {
+      "value": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      "type": "boxShadow",
+      "description": "Base shadow",
+      "usage": "Karty, komponenty"
+    },
+    "md": {
+      "value": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      "type": "boxShadow",
+      "description": "Medium shadow",
+      "usage": "Podniesione karty, dropdowny"
+    },
+    "lg": {
+      "value": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      "type": "boxShadow",
+      "description": "Large shadow",
+      "usage": "Modalne, overlays"
+    },
+    "xl": {
+      "value": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+      "type": "boxShadow",
+      "description": "Extra large shadow",
+      "usage": "Duże modalne, popovers"
+    },
+    "inner": {
+      "value": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+      "type": "boxShadow",
+      "description": "Inner shadow",
+      "usage": "Wciśnięte elementy, inputy"
+    },
+    "orange": {
+      "value": "0 4px 14px 0 rgba(255, 98, 0, 0.39)",
+      "type": "boxShadow",
+      "description": "Orange glow shadow",
+      "usage": "CTA buttons, orange elements"
+    },
+    "orangeLarge": {
+      "value": "0 10px 40px 0 rgba(255, 98, 0, 0.3)",
+      "type": "boxShadow",
+      "description": "Large orange glow",
+      "usage": "Hero CTAs, featured elements"
+    }
+  },
+  "zIndex": {
+    "base": {
+      "value": "0",
+      "type": "zIndex",
+      "description": "Base z-index"
+    },
+    "dropdown": {
+      "value": "1000",
+      "type": "zIndex",
+      "description": "Dropdowns, popovers"
+    },
+    "sticky": {
+      "value": "1020",
+      "type": "zIndex",
+      "description": "Sticky headers, footers"
+    },
+    "fixed": {
+      "value": "1030",
+      "type": "zIndex",
+      "description": "Fixed positioned elements"
+    },
+    "modalBackdrop": {
+      "value": "1040",
+      "type": "zIndex",
+      "description": "Modal backdrop overlay"
+    },
+    "modal": {
+      "value": "1050",
+      "type": "zIndex",
+      "description": "Modal dialogs"
+    },
+    "popover": {
+      "value": "1060",
+      "type": "zIndex",
+      "description": "Popovers"
+    },
+    "tooltip": {
+      "value": "1070",
+      "type": "zIndex",
+      "description": "Tooltips"
+    },
+    "notification": {
+      "value": "1080",
+      "type": "zIndex",
+      "description": "Toast notifications"
+    }
+  }
+}

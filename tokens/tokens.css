@@ -1,0 +1,473 @@
+/**
+ * ING Bank Design Tokens - CSS Variables
+ * Wygenerowane automatycznie z JSON design tokens
+ *
+ * Użycie:
+ * color: var(--ing-color-brand-orange);
+ * font-family: var(--ing-font-primary);
+ * padding: var(--ing-spacing-4);
+ */
+
+:root {
+  /* ========== KOLORY BRANDOWE ========== */
+
+  /* Kolory Główne */
+  --ing-color-brand-orange: #FF6200;
+  --ing-color-brand-orange-alt: #FF6600;
+  --ing-color-brand-navy-blue: #000066;
+  --ing-color-brand-deep-blue: #091C5A;
+  --ing-color-brand-white: #FFFFFF;
+
+  /* Kolory Tekstowe */
+  --ing-color-text-primary: #1A1A1A;
+  --ing-color-text-secondary: #4D4D4D;
+  --ing-color-text-tertiary: #767676;
+  --ing-color-text-inverse: #FFFFFF;
+  --ing-color-text-link: #FF6200;
+  --ing-color-text-link-hover: #CC4E00;
+
+  /* Kolory Tła */
+  --ing-color-bg-primary: #FFFFFF;
+  --ing-color-bg-secondary: #F5F5F5;
+  --ing-color-bg-tertiary: #E8E8E8;
+  --ing-color-bg-brand: #FF6200;
+  --ing-color-bg-brand-dark: #000066;
+
+  /* Kolory Ramek */
+  --ing-color-border-default: #D1D1D1;
+  --ing-color-border-hover: #B3B3B3;
+  --ing-color-border-focus: #FF6200;
+  --ing-color-border-error: #D0021B;
+
+  /* Kolory Stanów */
+  --ing-color-success: #00A03E;
+  --ing-color-success-light: #E6F7ED;
+  --ing-color-warning: #F59E00;
+  --ing-color-warning-light: #FFF4E6;
+  --ing-color-error: #D0021B;
+  --ing-color-error-light: #FDEAED;
+  --ing-color-info: #0066CC;
+  --ing-color-info-light: #E6F2FF;
+
+  /* Kolory Interaktywne */
+  --ing-color-interactive-default: #FF6200;
+  --ing-color-interactive-hover: #CC4E00;
+  --ing-color-interactive-active: #993A00;
+  --ing-color-interactive-disabled: #B3B3B3;
+
+  /* Gradienty */
+  --ing-gradient-orange: linear-gradient(135deg, #FF6200 0%, #CC4E00 100%);
+  --ing-gradient-blue: linear-gradient(135deg, #091C5A 0%, #000066 100%);
+  --ing-gradient-brand: linear-gradient(135deg, #FF6200 0%, #000066 100%);
+
+  /* ========== TYPOGRAFIA ========== */
+
+  /* Rodziny Fontów */
+  --ing-font-primary: 'ING Me', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --ing-font-monospace: 'Consolas', 'Monaco', 'Courier New', monospace;
+
+  /* Wagi Fontów */
+  --ing-font-weight-light: 300;
+  --ing-font-weight-regular: 400;
+  --ing-font-weight-medium: 500;
+  --ing-font-weight-semibold: 600;
+  --ing-font-weight-bold: 700;
+
+  /* Rozmiary Fontów */
+  --ing-font-size-xs: 0.75rem;      /* 12px */
+  --ing-font-size-sm: 0.875rem;     /* 14px */
+  --ing-font-size-base: 1rem;       /* 16px */
+  --ing-font-size-lg: 1.125rem;     /* 18px */
+  --ing-font-size-xl: 1.25rem;      /* 20px */
+  --ing-font-size-2xl: 1.5rem;      /* 24px */
+  --ing-font-size-3xl: 1.875rem;    /* 30px */
+  --ing-font-size-4xl: 2.25rem;     /* 36px */
+  --ing-font-size-5xl: 3rem;        /* 48px */
+  --ing-font-size-6xl: 3.75rem;     /* 60px */
+  --ing-font-size-7xl: 4.5rem;      /* 72px */
+
+  /* Line Heights */
+  --ing-line-height-tight: 1.25;
+  --ing-line-height-snug: 1.375;
+  --ing-line-height-normal: 1.5;
+  --ing-line-height-relaxed: 1.625;
+  --ing-line-height-loose: 2;
+
+  /* Letter Spacing */
+  --ing-letter-spacing-tighter: -0.05em;
+  --ing-letter-spacing-tight: -0.025em;
+  --ing-letter-spacing-normal: 0;
+  --ing-letter-spacing-wide: 0.025em;
+  --ing-letter-spacing-wider: 0.05em;
+  --ing-letter-spacing-widest: 0.1em;
+
+  /* ========== SPACING ========== */
+
+  --ing-spacing-0: 0;
+  --ing-spacing-1: 0.25rem;    /* 4px */
+  --ing-spacing-2: 0.5rem;     /* 8px */
+  --ing-spacing-3: 0.75rem;    /* 12px */
+  --ing-spacing-4: 1rem;       /* 16px */
+  --ing-spacing-5: 1.25rem;    /* 20px */
+  --ing-spacing-6: 1.5rem;     /* 24px */
+  --ing-spacing-8: 2rem;       /* 32px */
+  --ing-spacing-10: 2.5rem;    /* 40px */
+  --ing-spacing-12: 3rem;      /* 48px */
+  --ing-spacing-16: 4rem;      /* 64px */
+  --ing-spacing-20: 5rem;      /* 80px */
+  --ing-spacing-24: 6rem;      /* 96px */
+  --ing-spacing-32: 8rem;      /* 128px */
+
+  /* ========== BORDER RADIUS ========== */
+
+  --ing-radius-none: 0;
+  --ing-radius-sm: 0.125rem;    /* 2px */
+  --ing-radius-base: 0.25rem;   /* 4px */
+  --ing-radius-md: 0.375rem;    /* 6px */
+  --ing-radius-lg: 0.5rem;      /* 8px */
+  --ing-radius-xl: 0.75rem;     /* 12px */
+  --ing-radius-2xl: 1rem;       /* 16px */
+  --ing-radius-full: 9999px;
+
+  /* ========== BORDER WIDTH ========== */
+
+  --ing-border-none: 0;
+  --ing-border-thin: 1px;
+  --ing-border-medium: 2px;
+  --ing-border-thick: 4px;
+
+  /* ========== SHADOWS ========== */
+
+  --ing-shadow-none: none;
+  --ing-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --ing-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --ing-shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --ing-shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --ing-shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --ing-shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --ing-shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --ing-shadow-orange: 0 4px 14px 0 rgba(255, 98, 0, 0.39);
+  --ing-shadow-orange-lg: 0 10px 40px 0 rgba(255, 98, 0, 0.3);
+
+  /* ========== Z-INDEX ========== */
+
+  --ing-z-base: 0;
+  --ing-z-dropdown: 1000;
+  --ing-z-sticky: 1020;
+  --ing-z-fixed: 1030;
+  --ing-z-modal-backdrop: 1040;
+  --ing-z-modal: 1050;
+  --ing-z-popover: 1060;
+  --ing-z-tooltip: 1070;
+  --ing-z-notification: 1080;
+
+  /* ========== TRANSITIONS ========== */
+
+  --ing-transition-fast: 0.1s ease-in-out;
+  --ing-transition-base: 0.2s ease-in-out;
+  --ing-transition-slow: 0.3s ease-in-out;
+  --ing-transition-slower: 0.5s ease-in-out;
+
+  /* ========== BREAKPOINTS (dla media queries) ========== */
+
+  --ing-breakpoint-xs: 0px;
+  --ing-breakpoint-sm: 640px;
+  --ing-breakpoint-md: 768px;
+  --ing-breakpoint-lg: 1024px;
+  --ing-breakpoint-xl: 1280px;
+  --ing-breakpoint-2xl: 1536px;
+
+  /* ========== CONTAINER MAX WIDTHS ========== */
+
+  --ing-container-xs: 480px;
+  --ing-container-sm: 640px;
+  --ing-container-md: 768px;
+  --ing-container-lg: 1024px;
+  --ing-container-xl: 1280px;
+  --ing-container-2xl: 1536px;
+}
+
+/* ========== KLASY POMOCNICZE ========== */
+
+/* Typografia */
+.ing-h1 {
+  font-size: var(--ing-font-size-6xl);
+  line-height: var(--ing-line-height-tight);
+  font-weight: var(--ing-font-weight-bold);
+  letter-spacing: var(--ing-letter-spacing-tight);
+}
+
+.ing-h2 {
+  font-size: var(--ing-font-size-5xl);
+  line-height: var(--ing-line-height-tight);
+  font-weight: var(--ing-font-weight-bold);
+  letter-spacing: var(--ing-letter-spacing-tight);
+}
+
+.ing-h3 {
+  font-size: var(--ing-font-size-4xl);
+  line-height: var(--ing-line-height-snug);
+  font-weight: var(--ing-font-weight-semibold);
+  letter-spacing: var(--ing-letter-spacing-tight);
+}
+
+.ing-h4 {
+  font-size: var(--ing-font-size-3xl);
+  line-height: var(--ing-line-height-snug);
+  font-weight: var(--ing-font-weight-semibold);
+}
+
+.ing-h5 {
+  font-size: var(--ing-font-size-2xl);
+  line-height: var(--ing-line-height-normal);
+  font-weight: var(--ing-font-weight-semibold);
+}
+
+.ing-h6 {
+  font-size: var(--ing-font-size-xl);
+  line-height: var(--ing-line-height-normal);
+  font-weight: var(--ing-font-weight-semibold);
+}
+
+.ing-body {
+  font-size: var(--ing-font-size-base);
+  line-height: var(--ing-line-height-normal);
+  font-weight: var(--ing-font-weight-regular);
+}
+
+.ing-body-large {
+  font-size: var(--ing-font-size-lg);
+  line-height: var(--ing-line-height-relaxed);
+  font-weight: var(--ing-font-weight-regular);
+}
+
+.ing-body-small {
+  font-size: var(--ing-font-size-sm);
+  line-height: var(--ing-line-height-normal);
+  font-weight: var(--ing-font-weight-regular);
+}
+
+/* Kolory Tekstu */
+.ing-text-primary {
+  color: var(--ing-color-text-primary);
+}
+
+.ing-text-secondary {
+  color: var(--ing-color-text-secondary);
+}
+
+.ing-text-brand {
+  color: var(--ing-color-brand-orange);
+}
+
+/* Kolory Tła */
+.ing-bg-primary {
+  background-color: var(--ing-color-bg-primary);
+}
+
+.ing-bg-secondary {
+  background-color: var(--ing-color-bg-secondary);
+}
+
+.ing-bg-brand {
+  background-color: var(--ing-color-bg-brand);
+}
+
+.ing-bg-gradient-orange {
+  background: var(--ing-gradient-orange);
+}
+
+.ing-bg-gradient-brand {
+  background: var(--ing-gradient-brand);
+}
+
+/* Container */
+.ing-container {
+  width: 100%;
+  max-width: var(--ing-container-lg);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--ing-spacing-4);
+  padding-right: var(--ing-spacing-4);
+}
+
+@media (min-width: 1024px) {
+  .ing-container {
+    padding-left: var(--ing-spacing-6);
+    padding-right: var(--ing-spacing-6);
+  }
+}
+
+/* Card */
+.ing-card {
+  background-color: var(--ing-color-bg-primary);
+  border: var(--ing-border-thin) solid #E8E8E8;
+  border-radius: var(--ing-radius-lg);
+  padding: var(--ing-spacing-6);
+  box-shadow: var(--ing-shadow-sm);
+  transition: var(--ing-transition-base);
+}
+
+.ing-card:hover {
+  box-shadow: var(--ing-shadow-md);
+}
+
+/* Button Base */
+.ing-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ing-font-primary);
+  font-weight: var(--ing-font-weight-semibold);
+  border-radius: var(--ing-radius-base);
+  transition: var(--ing-transition-base);
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+}
+
+.ing-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Button Primary */
+.ing-button-primary {
+  background-color: var(--ing-color-brand-orange);
+  color: var(--ing-color-brand-white);
+  padding: 0.75rem 1.5rem;
+  font-size: var(--ing-font-size-base);
+  box-shadow: var(--ing-shadow-orange);
+}
+
+.ing-button-primary:hover:not(:disabled) {
+  background-color: var(--ing-color-interactive-hover);
+  box-shadow: 0 6px 20px 0 rgba(255, 98, 0, 0.50);
+}
+
+.ing-button-primary:active:not(:disabled) {
+  background-color: var(--ing-color-interactive-active);
+}
+
+/* Button Secondary */
+.ing-button-secondary {
+  background-color: var(--ing-color-bg-primary);
+  color: var(--ing-color-brand-orange);
+  border: var(--ing-border-medium) solid var(--ing-color-brand-orange);
+  padding: 0.75rem 1.5rem;
+  font-size: var(--ing-font-size-base);
+}
+
+.ing-button-secondary:hover:not(:disabled) {
+  background-color: var(--ing-color-bg-secondary);
+  color: var(--ing-color-interactive-hover);
+  border-color: var(--ing-color-interactive-hover);
+}
+
+/* Input */
+.ing-input {
+  width: 100%;
+  font-family: var(--ing-font-primary);
+  font-size: var(--ing-font-size-base);
+  padding: 0.75rem 1rem;
+  border: var(--ing-border-thin) solid var(--ing-color-border-default);
+  border-radius: var(--ing-radius-base);
+  background-color: var(--ing-color-bg-primary);
+  color: var(--ing-color-text-primary);
+  transition: var(--ing-transition-base);
+}
+
+.ing-input:hover {
+  border-color: var(--ing-color-border-hover);
+}
+
+.ing-input:focus {
+  outline: none;
+  border-width: var(--ing-border-medium);
+  border-color: var(--ing-color-border-focus);
+  box-shadow: 0 0 0 3px rgba(255, 98, 0, 0.1);
+}
+
+.ing-input::placeholder {
+  color: var(--ing-color-text-tertiary);
+}
+
+.ing-input:disabled {
+  background-color: var(--ing-color-bg-secondary);
+  color: var(--ing-color-text-tertiary);
+  cursor: not-allowed;
+}
+
+/* Link */
+.ing-link {
+  color: var(--ing-color-text-link);
+  text-decoration: underline;
+  transition: var(--ing-transition-base);
+}
+
+.ing-link:hover {
+  color: var(--ing-color-text-link-hover);
+}
+
+/* Badge */
+.ing-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: var(--ing-font-size-sm);
+  font-weight: var(--ing-font-weight-semibold);
+  border-radius: var(--ing-radius-full);
+}
+
+.ing-badge-primary {
+  background-color: var(--ing-color-brand-orange);
+  color: var(--ing-color-brand-white);
+}
+
+.ing-badge-success {
+  background-color: var(--ing-color-success);
+  color: var(--ing-color-brand-white);
+}
+
+.ing-badge-warning {
+  background-color: var(--ing-color-warning);
+  color: var(--ing-color-brand-white);
+}
+
+.ing-badge-error {
+  background-color: var(--ing-color-error);
+  color: var(--ing-color-brand-white);
+}
+
+/* Alert */
+.ing-alert {
+  padding: var(--ing-spacing-4);
+  border-radius: var(--ing-radius-base);
+  border-width: var(--ing-border-thin);
+  border-style: solid;
+  font-size: var(--ing-font-size-sm);
+}
+
+.ing-alert-success {
+  background-color: var(--ing-color-success-light);
+  color: #00582A;
+  border-color: var(--ing-color-success);
+}
+
+.ing-alert-warning {
+  background-color: var(--ing-color-warning-light);
+  color: #7A4F00;
+  border-color: var(--ing-color-warning);
+}
+
+.ing-alert-error {
+  background-color: var(--ing-color-error-light);
+  color: #68010E;
+  border-color: var(--ing-color-error);
+}
+
+.ing-alert-info {
+  background-color: var(--ing-color-info-light);
+  color: #003366;
+  border-color: var(--ing-color-info);
+}

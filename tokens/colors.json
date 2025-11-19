@@ -1,0 +1,307 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ING Bank Design Tokens - Colors",
+  "description": "Kompletna paleta kolorów ING Bank zgodna z wytycznymi marki",
+  "colors": {
+    "brand": {
+      "primary": {
+        "orange": {
+          "value": "#FF6200",
+          "type": "color",
+          "description": "ING Blaze Orange - główny kolor marki ING",
+          "rgb": "rgb(255, 98, 0)",
+          "hsl": "hsl(23, 100%, 50%)",
+          "usage": "Logo, główne CTA, akcenty, linki, aktywne stany"
+        },
+        "orangeAlt": {
+          "value": "#FF6600",
+          "type": "color",
+          "description": "ING Orange - alternatywna wersja pomarańczowego",
+          "rgb": "rgb(255, 102, 0)",
+          "usage": "Niektóre materiały ING Group"
+        }
+      },
+      "secondary": {
+        "navyBlue": {
+          "value": "#000066",
+          "type": "color",
+          "description": "ING Navy Blue - drugorzędny kolor marki",
+          "rgb": "rgb(0, 0, 102)",
+          "hsl": "hsl(240, 100%, 20%)",
+          "usage": "Tekst nagłówków, elementy UI, tła"
+        },
+        "deepBlue": {
+          "value": "#091C5A",
+          "type": "color",
+          "description": "ING Deep Blue - głęboki niebieski",
+          "rgb": "rgb(9, 28, 90)",
+          "usage": "Logo ING Group, ciemniejsze warianty"
+        }
+      },
+      "neutral": {
+        "white": {
+          "value": "#FFFFFF",
+          "type": "color",
+          "description": "Biały - element logo i tła",
+          "rgb": "rgb(255, 255, 255)",
+          "usage": "Tła, tekst na ciemnych tłach, karty"
+        }
+      }
+    },
+    "semantic": {
+      "text": {
+        "primary": {
+          "value": "#1A1A1A",
+          "type": "color",
+          "description": "Główny kolor tekstu",
+          "usage": "Tekst podstawowy, paragrafy"
+        },
+        "secondary": {
+          "value": "#4D4D4D",
+          "type": "color",
+          "description": "Drugorzędny kolor tekstu",
+          "usage": "Tekst pomocniczy, opisy"
+        },
+        "tertiary": {
+          "value": "#767676",
+          "type": "color",
+          "description": "Trzeciorzędny kolor tekstu",
+          "usage": "Placeholder, wyłączone elementy"
+        },
+        "inverse": {
+          "value": "#FFFFFF",
+          "type": "color",
+          "description": "Tekst na ciemnym tle",
+          "usage": "Tekst na gradientach, ciemnych tłach"
+        },
+        "link": {
+          "value": "#FF6200",
+          "type": "color",
+          "description": "Kolor linków",
+          "usage": "Wszystkie linki tekstowe"
+        },
+        "linkHover": {
+          "value": "#CC4E00",
+          "type": "color",
+          "description": "Kolor linków po najechaniu",
+          "usage": "Stan hover dla linków"
+        }
+      },
+      "background": {
+        "primary": {
+          "value": "#FFFFFF",
+          "type": "color",
+          "description": "Główne tło strony",
+          "usage": "Tło aplikacji, strony"
+        },
+        "secondary": {
+          "value": "#F5F5F5",
+          "type": "color",
+          "description": "Drugorzędne tło",
+          "usage": "Sekcje, karty, panele"
+        },
+        "tertiary": {
+          "value": "#E8E8E8",
+          "type": "color",
+          "description": "Trzeciorzędne tło",
+          "usage": "Wyróżnienia, oddzielenia"
+        },
+        "brand": {
+          "value": "#FF6200",
+          "type": "color",
+          "description": "Tło brandowe",
+          "usage": "Hero sections, CTA backgrounds"
+        },
+        "brandDark": {
+          "value": "#000066",
+          "type": "color",
+          "description": "Ciemne tło brandowe",
+          "usage": "Footer, dark sections"
+        }
+      },
+      "border": {
+        "default": {
+          "value": "#D1D1D1",
+          "type": "color",
+          "description": "Domyślna ramka",
+          "usage": "Ramki inputów, kart, separatory"
+        },
+        "hover": {
+          "value": "#B3B3B3",
+          "type": "color",
+          "description": "Ramka po najechaniu",
+          "usage": "Stan hover dla elementów z ramką"
+        },
+        "focus": {
+          "value": "#FF6200",
+          "type": "color",
+          "description": "Ramka w fokusie",
+          "usage": "Aktywne inputy, focus states"
+        },
+        "error": {
+          "value": "#D0021B",
+          "type": "color",
+          "description": "Ramka błędu",
+          "usage": "Walidacja formularzy"
+        }
+      },
+      "state": {
+        "success": {
+          "value": "#00A03E",
+          "type": "color",
+          "description": "Sukces",
+          "rgb": "rgb(0, 160, 62)",
+          "usage": "Komunikaty sukcesu, pozytywne akcje"
+        },
+        "successLight": {
+          "value": "#E6F7ED",
+          "type": "color",
+          "description": "Jasne tło sukcesu",
+          "usage": "Tło komunikatów sukcesu"
+        },
+        "warning": {
+          "value": "#F59E00",
+          "type": "color",
+          "description": "Ostrzeżenie",
+          "rgb": "rgb(245, 158, 0)",
+          "usage": "Komunikaty ostrzeżeń"
+        },
+        "warningLight": {
+          "value": "#FFF4E6",
+          "type": "color",
+          "description": "Jasne tło ostrzeżenia",
+          "usage": "Tło komunikatów ostrzeżeń"
+        },
+        "error": {
+          "value": "#D0021B",
+          "type": "color",
+          "description": "Błąd",
+          "rgb": "rgb(208, 2, 27)",
+          "usage": "Komunikaty błędów, walidacja"
+        },
+        "errorLight": {
+          "value": "#FDEAED",
+          "type": "color",
+          "description": "Jasne tło błędu",
+          "usage": "Tło komunikatów błędów"
+        },
+        "info": {
+          "value": "#0066CC",
+          "type": "color",
+          "description": "Informacja",
+          "rgb": "rgb(0, 102, 204)",
+          "usage": "Komunikaty informacyjne"
+        },
+        "infoLight": {
+          "value": "#E6F2FF",
+          "type": "color",
+          "description": "Jasne tło informacji",
+          "usage": "Tło komunikatów informacyjnych"
+        }
+      },
+      "interactive": {
+        "default": {
+          "value": "#FF6200",
+          "type": "color",
+          "description": "Domyślny stan interaktywny",
+          "usage": "Przyciski, linki, elementy klikalne"
+        },
+        "hover": {
+          "value": "#CC4E00",
+          "type": "color",
+          "description": "Stan hover",
+          "usage": "Najechanie na elementy interaktywne"
+        },
+        "active": {
+          "value": "#993A00",
+          "type": "color",
+          "description": "Stan aktywny",
+          "usage": "Kliknięte elementy, aktywne zakładki"
+        },
+        "disabled": {
+          "value": "#B3B3B3",
+          "type": "color",
+          "description": "Stan wyłączony",
+          "usage": "Nieaktywne przyciski, wyłączone elementy"
+        }
+      }
+    },
+    "gradients": {
+      "orangeToDeepOrange": {
+        "value": "linear-gradient(135deg, #FF6200 0%, #CC4E00 100%)",
+        "type": "gradient",
+        "description": "Gradient pomarańczowy",
+        "usage": "Hero sections, CTA backgrounds"
+      },
+      "blueToNavy": {
+        "value": "linear-gradient(135deg, #091C5A 0%, #000066 100%)",
+        "type": "gradient",
+        "description": "Gradient niebieski",
+        "usage": "Footer, dark sections"
+      },
+      "orangeToBlue": {
+        "value": "linear-gradient(135deg, #FF6200 0%, #000066 100%)",
+        "type": "gradient",
+        "description": "Gradient brandowy",
+        "usage": "Specjalne sekcje, akcenty"
+      }
+    },
+    "opacity": {
+      "0": {
+        "value": "0",
+        "type": "opacity",
+        "description": "Przezroczysty"
+      },
+      "10": {
+        "value": "0.1",
+        "type": "opacity",
+        "description": "10% nieprzezroczystości"
+      },
+      "20": {
+        "value": "0.2",
+        "type": "opacity",
+        "description": "20% nieprzezroczystości"
+      },
+      "30": {
+        "value": "0.3",
+        "type": "opacity",
+        "description": "30% nieprzezroczystości"
+      },
+      "40": {
+        "value": "0.4",
+        "type": "opacity",
+        "description": "40% nieprzezroczystości"
+      },
+      "50": {
+        "value": "0.5",
+        "type": "opacity",
+        "description": "50% nieprzezroczystości"
+      },
+      "60": {
+        "value": "0.6",
+        "type": "opacity",
+        "description": "60% nieprzezroczystości"
+      },
+      "70": {
+        "value": "0.7",
+        "type": "opacity",
+        "description": "70% nieprzezroczystości"
+      },
+      "80": {
+        "value": "0.8",
+        "type": "opacity",
+        "description": "80% nieprzezroczystości"
+      },
+      "90": {
+        "value": "0.9",
+        "type": "opacity",
+        "description": "90% nieprzezroczystości"
+      },
+      "100": {
+        "value": "1",
+        "type": "opacity",
+        "description": "100% nieprzezroczystości"
+      }
+    }
+  }
+}

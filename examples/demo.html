@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ING Design Tokens - Demo</title>
+  <link rel="stylesheet" href="../tokens/tokens.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--ing-font-primary);
+      color: var(--ing-color-text-primary);
+      background-color: var(--ing-color-bg-secondary);
+      line-height: var(--ing-line-height-normal);
+    }
+
+    .demo-section {
+      padding: var(--ing-spacing-12) var(--ing-spacing-4);
+    }
+
+    .demo-section:nth-child(even) {
+      background-color: var(--ing-color-bg-primary);
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: var(--ing-spacing-8);
+      color: var(--ing-color-brand-navy-blue);
+    }
+
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--ing-spacing-6);
+      max-width: var(--ing-container-xl);
+      margin: 0 auto;
+    }
+
+    .button-row {
+      display: flex;
+      gap: var(--ing-spacing-4);
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: var(--ing-spacing-4) 0;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: var(--ing-spacing-3);
+      flex-wrap: wrap;
+      margin: var(--ing-spacing-4) 0;
+    }
+
+    .color-swatch {
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      border-radius: var(--ing-radius-base);
+      margin: var(--ing-spacing-2);
+      box-shadow: var(--ing-shadow-base);
+    }
+
+    .color-label {
+      font-size: var(--ing-font-size-sm);
+      margin-top: var(--ing-spacing-1);
+      text-align: center;
+      font-weight: var(--ing-font-weight-medium);
+    }
+
+    .form-group {
+      margin-bottom: var(--ing-spacing-4);
+    }
+
+    .form-label {
+      display: block;
+      font-size: var(--ing-font-size-sm);
+      font-weight: var(--ing-font-weight-medium);
+      margin-bottom: var(--ing-spacing-2);
+      color: var(--ing-color-text-primary);
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section -->
+  <section style="background: var(--ing-gradient-brand); padding: var(--ing-spacing-20) var(--ing-spacing-4); text-align: center; color: var(--ing-color-brand-white);">
+    <div class="ing-container">
+      <h1 class="ing-h1" style="margin-bottom: var(--ing-spacing-6); color: var(--ing-color-brand-white);">
+        ING Design Tokens
+      </h1>
+      <p class="ing-body-large" style="max-width: 700px; margin: 0 auto var(--ing-spacing-8); color: var(--ing-color-brand-white); opacity: 0.95;">
+        Kompletny system design dla aplikacji ING Bank. Wszystkie kolory, typografia, spacing i komponenty w jednym miejscu.
+      </p>
+      <button class="ing-button ing-button-primary" style="background: var(--ing-color-brand-white); color: var(--ing-color-brand-orange); box-shadow: var(--ing-shadow-md);">
+        Rozpocznij
+      </button>
+    </div>
+  </section>
+
+  <!-- Colors Section -->
+  <section class="demo-section">
+    <div class="ing-container">
+      <h2 class="ing-h2 section-title">Kolory</h2>
+
+      <h3 class="ing-h4" style="margin-bottom: var(--ing-spacing-4); color: var(--ing-color-brand-orange);">
+        Kolory Brandowe
+      </h3>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--ing-spacing-6); margin-bottom: var(--ing-spacing-8);">
+        <div style="text-align: center;">
+          <div class="color-swatch" style="background: var(--ing-color-brand-orange);"></div>
+          <div class="color-label">ING Orange<br>#FF6200</div>
+        </div>
+        <div style="text-align: center;">
+          <div class="color-swatch" style="background: var(--ing-color-brand-navy-blue);"></div>
+          <div class="color-label">Navy Blue<br>#000066</div>
+        </div>
+        <div style="text-align: center;">
+          <div class="color-swatch" style="background: var(--ing-color-brand-deep-blue);"></div>
+          <div class="color-label">Deep Blue<br>#091C5A</div>
+        </div>
+      </div>
+
+      <h3 class="ing-h4" style="margin-bottom: var(--ing-spacing-4); color: var(--ing-color-brand-orange);">
+        Kolory Stanów
+      </h3>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--ing-spacing-6);">
+        <div style="text-align: center;">
+          <div class="color-swatch" style="background: var(--ing-color-success);"></div>
+          <div class="color-label">Success<br>#00A03E</div>
+        </div>
+        <div style="text-align: center;">
+          <div class="color-swatch" style="background: var(--ing-color-warning);"></div>
+          <div class="color-label">Warning<br>#F59E00</div>
+        </div>
+        <div style="text-align: center;">
+          <div class="color-swatch" style="background: var(--ing-color-error);"></div>
+          <div class="color-label">Error<br>#D0021B</div>
+        </div>
+        <div style="text-align: center;">
+          <div class="color-swatch" style="background: var(--ing-color-info);"></div>
+          <div class="color-label">Info<br>#0066CC</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Typography Section -->
+  <section class="demo-section">
+    <div class="ing-container">
+      <h2 class="ing-h2 section-title">Typografia</h2>
+
+      <div style="max-width: 800px; margin: 0 auto;">
+        <h1 class="ing-h1" style="margin-bottom: var(--ing-spacing-4);">Heading 1 - 60px</h1>
+        <h2 class="ing-h2" style="margin-bottom: var(--ing-spacing-4);">Heading 2 - 48px</h2>
+        <h3 class="ing-h3" style="margin-bottom: var(--ing-spacing-4);">Heading 3 - 36px</h3>
+        <h4 class="ing-h4" style="margin-bottom: var(--ing-spacing-4);">Heading 4 - 30px</h4>
+        <h5 class="ing-h5" style="margin-bottom: var(--ing-spacing-4);">Heading 5 - 24px</h5>
+        <h6 class="ing-h6" style="margin-bottom: var(--ing-spacing-6);">Heading 6 - 20px</h6>
+
+        <p class="ing-body-large" style="margin-bottom: var(--ing-spacing-4);">
+          Body Large (18px) - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+
+        <p class="ing-body" style="margin-bottom: var(--ing-spacing-4);">
+          Body (16px) - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+        </p>
+
+        <p class="ing-body-small" style="color: var(--ing-color-text-secondary);">
+          Body Small (14px) - Tekst pomocniczy lub informacje drugorzędne.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Buttons Section -->
+  <section class="demo-section">
+    <div class="ing-container">
+      <h2 class="ing-h2 section-title">Przyciski</h2>
+
+      <div class="button-row">
+        <button class="ing-button ing-button-primary">Primary Button</button>
+        <button class="ing-button ing-button-secondary">Secondary Button</button>
+        <button class="ing-button ing-button-primary" disabled>Disabled Button</button>
+      </div>
+
+      <div class="button-row">
+        <button class="ing-button ing-button-primary" style="padding: 0.5rem 1rem; font-size: var(--ing-font-size-sm);">
+          Small
+        </button>
+        <button class="ing-button ing-button-primary">
+          Medium
+        </button>
+        <button class="ing-button ing-button-primary" style="padding: 1rem 2rem; font-size: var(--ing-font-size-lg);">
+          Large
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Forms Section -->
+  <section class="demo-section">
+    <div class="ing-container">
+      <h2 class="ing-h2 section-title">Formularze</h2>
+
+      <div class="ing-card" style="max-width: 500px; margin: 0 auto;">
+        <h3 class="ing-h4" style="margin-bottom: var(--ing-spacing-6);">Przykładowy formularz</h3>
+
+        <div class="form-group">
+          <label class="form-label">Imię i nazwisko</label>
+          <input type="text" class="ing-input" placeholder="Jan Kowalski">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="ing-input" placeholder="jan.kowalski@example.com">
+          <p style="font-size: var(--ing-font-size-xs); color: var(--ing-color-text-tertiary); margin-top: var(--ing-spacing-1);">
+            Nie udostępnimy Twojego emaila
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Kraj</label>
+          <select class="ing-input" style="appearance: none; background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; padding-right: 2.5rem;">
+            <option>Polska</option>
+            <option>Niemcy</option>
+            <option>Holandia</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Wiadomość</label>
+          <textarea class="ing-input" rows="4" placeholder="Twoja wiadomość..."></textarea>
+        </div>
+
+        <button class="ing-button ing-button-primary" style="width: 100%;">
+          Wyślij formularz
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cards Section -->
+  <section class="demo-section">
+    <div class="ing-container">
+      <h2 class="ing-h2 section-title">Karty</h2>
+
+      <div class="component-grid">
+        <div class="ing-card">
+          <span class="ing-badge ing-badge-primary">Nowe</span>
+          <h3 class="ing-h5" style="margin: var(--ing-spacing-4) 0 var(--ing-spacing-2);">
+            Konto osobiste
+          </h3>
+          <p class="ing-body-small" style="color: var(--ing-color-text-secondary); margin-bottom: var(--ing-spacing-6);">
+            Zarządzaj swoimi finansami z elastycznym kontem osobistym. Bez opłat za prowadzenie.
+          </p>
+          <button class="ing-button ing-button-secondary" style="width: 100%;">
+            Dowiedz się więcej
+          </button>
+        </div>
+
+        <div class="ing-card">
+          <span class="ing-badge ing-badge-success">Aktywne</span>
+          <h3 class="ing-h5" style="margin: var(--ing-spacing-4) 0 var(--ing-spacing-2);">
+            Konto oszczędnościowe
+          </h3>
+          <p class="ing-body-small" style="color: var(--ing-color-text-secondary); margin-bottom: var(--ing-spacing-6);">
+            Odłóż pieniądze na przyszłość z atrakcyjnym oprocentowaniem i elastycznością.
+          </p>
+          <button class="ing-button ing-button-secondary" style="width: 100%;">
+            Otwórz konto
+          </button>
+        </div>
+
+        <div class="ing-card">
+          <span class="ing-badge ing-badge-warning">Promocja</span>
+          <h3 class="ing-h5" style="margin: var(--ing-spacing-4) 0 var(--ing-spacing-2);">
+            Kredyt hipoteczny
+          </h3>
+          <p class="ing-body-small" style="color: var(--ing-color-text-secondary); margin-bottom: var(--ing-spacing-6);">
+            Spełnij marzenie o własnym mieszkaniu z naszym kredytem hipotecznym.
+          </p>
+          <button class="ing-button ing-button-secondary" style="width: 100%;">
+            Sprawdź ofertę
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Badges Section -->
+  <section class="demo-section">
+    <div class="ing-container">
+      <h2 class="ing-h2 section-title">Odznaki</h2>
+
+      <div class="badge-row" style="justify-content: center;">
+        <span class="ing-badge ing-badge-primary">Primary</span>
+        <span class="ing-badge ing-badge-success">Success</span>
+        <span class="ing-badge ing-badge-warning">Warning</span>
+        <span class="ing-badge ing-badge-error">Error</span>
+        <span class="ing-badge" style="background: var(--ing-color-bg-tertiary); color: var(--ing-color-text-primary);">Default</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alerts Section -->
+  <section class="demo-section">
+    <div class="ing-container">
+      <h2 class="ing-h2 section-title">Alerty</h2>
+
+      <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--ing-spacing-4);">
+        <div class="ing-alert ing-alert-success">
+          ✓ Operacja zakończona sukcesem! Twoje konto zostało zaktualizowane.
+        </div>
+
+        <div class="ing-alert ing-alert-info">
+          ℹ Twoja sesja wygaśnie za 5 minut. Zapisz zmiany przed wyjściem.
+        </div>
+
+        <div class="ing-alert ing-alert-warning">
+          ⚠ Uwaga! Twoje hasło wygasa za 7 dni. Zmień je w ustawieniach konta.
+        </div>
+
+        <div class="ing-alert ing-alert-error">
+          ✕ Wystąpił błąd podczas przetwarzania. Spróbuj ponownie później.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background: var(--ing-color-brand-deep-blue); color: var(--ing-color-brand-white); padding: var(--ing-spacing-12) var(--ing-spacing-4);">
+    <div class="ing-container" style="text-align: center;">
+      <h3 class="ing-h4" style="color: var(--ing-color-brand-white); margin-bottom: var(--ing-spacing-4);">
+        ING Design Tokens
+      </h3>
+      <p class="ing-body" style="color: var(--ing-color-brand-white); opacity: 0.9; margin-bottom: var(--ing-spacing-6);">
+        Kompletny system design dla aplikacji ING Bank
+      </p>
+      <p class="ing-body-small" style="color: var(--ing-color-brand-white); opacity: 0.7;">
+        Stworzone z 🧡 dla społeczności ING
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
