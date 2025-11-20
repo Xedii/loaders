@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinetic Capsule Loader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ing-orange: #FF6200;
+            --ing-navy: #1F1F5F;
+            --bg-color: #FFFFFF;
+            --track-color: #F3F4F6;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--ing-navy);
+            overflow: hidden;
+            user-select: none;
+            cursor: pointer;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- GŁÓWNY KONTENER --- */
+        .loader-wrapper {
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* --- TYPOGRAFIA OPISOWA (Góra/Dół) --- */
+        .meta-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 500;
+            color: #9CA3AF;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fade-in-up 0.8s 0.2s forwards ease-out;
+        }
+
+        /* --- TOR (TRACK) --- */
+        .track {
+            position: relative;
+            height: 60px; /* Wysokość kapsuły */
+            background: var(--track-color);
+            border-radius: 30px; /* Pełne zaokrąglenie */
+            overflow: hidden; /* Ważne dla maskowania */
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+            transition: background-color 0.5s;
+        }
+
+        /* Grid w tle toru (subtelny detal techniczny) */
+        .track-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(90deg, transparent 95%, rgba(31, 31, 95, 0.05) 95%);
+            background-size: 20px 100%;
+            opacity: 0.5;
+        }
+
+        /* --- KAPSUŁA (PASEK) --- */
+        .capsule {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 40%; /* START: 40% */
+            background-color: var(--ing-navy);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Tekst przy prawej krawędzi */
+            padding-right: 24px;
+            box-shadow: 0 4px 20px rgba(31, 31, 95, 0.3);
+            will-change: width, background-color, box-shadow;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        /* Płyn wewnątrz kapsuły (efekt połysku/gradientu) */
+        .capsule::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg) translateX(-150%);
+            animation: shimmer 3s infinite;
+        }
+
+        /* --- TEKST WEWNĄTRZ KAPSUŁY --- */
+        .capsule-content {
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            line-height: 1;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            white-space: nowrap;
+            position: relative;
+            z-index: 20;
+        }
+
+        .percent-symbol {
+            font-size: 0.8rem;
+            font-weight: 400;
+            opacity: 0.7;
+            transform: translateY(-2px);
+        }
+
+        /* --- MARKERY START/KONIEC --- */
+        .marker-line {
+            position: absolute;
+            top: 15px;
+            bottom: 15px;
+            width: 1px;
+            background: #CBD5E1;
+            z-index: 1;
+        }
+        .marker-start { left: 40%; border-left: 1px dashed #9CA3AF; background: none; }
+        .marker-end { right: 24px; width: 2px; background: #E5E7EB; }
+
+        /* --- STANY ANIMACJI --- */
+        
+        /* Stan: Rozciąganie (Momentum) */
+        .is-stretching .capsule {
+            border-radius: 30px 10px 10px 30px; /* "Aerodynamiczny" kształt przodu */
+        }
+
+        /* Stan: Sukces (100%) */
+        .is-success .capsule {
+            background-color: var(--ing-orange);
+            box-shadow: 0 0 30px rgba(255, 98, 0, 0.4);
+        }
+
+        .is-success .track {
+            background-color: #FFF0E6; /* Bardzo jasny pomarańcz w tle */
+        }
+
+        /* --- TEKST KOŃCOWY (Poza kapsułą) --- */
+        .result-text {
+            position: absolute;
+            right: 0;
+            top: -40px;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--ing-orange);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .show-result { opacity: 1; transform: translateY(0); }
+
+        /* --- ANIMACJE KLUCZOWE --- */
+        @keyframes shimmer {
+            0% { transform: skewX(-20deg) translateX(-150%); }
+            100% { transform: skewX(-20deg) translateX(300%); }
+        }
+
+        @keyframes fade-in-up {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- UI: INSTRUKCJA --- */
+        .cta {
+            position: absolute;
+            bottom: 15%;
+            font-size: 0.75rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #9CA3AF;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 50% { opacity: 0.4; } }
+
+        /* Cząsteczki (Confetti) - minimalistyczne kropki */
+        .dot {
+            position: absolute;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--ing-orange);
+            pointer-events: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="loader-wrapper">
+        
+        <div class="result-text" id="result-text">ZROBIONE</div>
+
+        <div class="meta-label">
+            <span>Status Obecny</span>
+            <span id="target-label">Cel: Q4</span>
+        </div>
+
+        <div class="track" id="track">
+            <div class="track-grid"></div>
+            
+            <div class="marker-line marker-start">
+                <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-gray-400 tracking-widest">START</span>
+            </div>
+            
+            <div class="capsule" id="capsule">
+                <div class="capsule-content">
+                    <span id="counter">40</span>
+                    <span class="percent-symbol">%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="meta-label" style="margin-top: 1rem; animation-delay: 0.4s;">
+            <span id="desc-left" class="text-gray-300">Efektywność</span>
+            <span id="desc-right" class="font-bold text-ing-navy transition-colors duration-500">W toku...</span>
+        </div>
+
+    </div>
+
+    <div id="cta" class="cta">Kliknij, aby przyspieszyć</div>
+    <div id="particles" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+
+    <script>
+        const CONFIG = {
+            start: 40,
+            end: 100,
+            duration: 1400, // Nieco szybciej dla dynamiki
+        };
+
+        let isActive = false;
+
+        // Elementy DOM
+        const capsule = document.getElementById('capsule');
+        const counter = document.getElementById('counter');
+        const track = document.getElementById('track');
+        const descRight = document.getElementById('desc-right');
+        const resultText = document.getElementById('result-text');
+        const cta = document.getElementById('cta');
+
+        document.body.addEventListener('click', startSequence);
+
+        function startSequence() {
+            if (isActive) return;
+            isActive = true;
+            cta.style.opacity = 0;
+
+            // 1. WIND-UP (Cofnięcie przed skokiem - jak naciąganie procy)
+            capsule.style.transition = "width 0.4s cubic-bezier(0.4, 0, 1, 1), border-radius 0.3s";
+            capsule.style.width = "35%"; // Lekkie cofnięcie
+            
+            setTimeout(() => {
+                // 2. LAUNCH (Wystrzał)
+                document.body.classList.add('is-stretching'); // Zmiana kształtu na bardziej "szybki"
+                capsule.style.transition = `width ${CONFIG.duration}ms cubic-bezier(0.25, 1, 0.5, 1)`; // Custom easing
+                
+                animateValue(CONFIG.start, CONFIG.end, CONFIG.duration);
+            }, 400);
+        }
+
+        function animateValue(start, end, duration) {
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing quartOut - szybki start, powolne hamowanie
+                const ease = 1 - Math.pow(1 - progress, 4);
+                
+                const currentVal = Math.floor(start + (ease * (end - start)));
+                
+                // Aktualizacja UI
+                counter.innerText = currentVal;
+                capsule.style.width = `${currentVal}%`;
+
+                // Efekt "drżenia" tekstu przy dużej prędkości (w środku animacji)
+                if (progress > 0.2 && progress < 0.8) {
+                    counter.style.transform = `skewX(-5deg)`;
+                } else {
+                    counter.style.transform = `skewX(0deg)`;
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    finalize();
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        function finalize() {
+            // 3. IMPACT (Uderzenie w 100%)
+            document.body.classList.remove('is-stretching');
+            document.body.classList.add('is-success');
+            
+            // Sztywne ustawienie wartości
+            counter.innerText = "100";
+            capsule.style.width = "100%";
+            
+            // Zmiana tekstów
+            descRight.innerText = "ZAKOŃCZONE";
+            descRight.style.color = "#FF6200";
+            resultText.classList.add('show-result');
+
+            // Efekt wstrząsu ekranem (delikatny)
+            document.body.animate([
+                { transform: 'translate(0,0)' },
+                { transform: 'translate(-2px, 1px)' },
+                { transform: 'translate(2px, -1px)' },
+                { transform: 'translate(0,0)' }
+            ], { duration: 300 });
+
+            spawnParticles();
+        }
+
+        function spawnParticles() {
+            const container = document.getElementById('particles');
+            const rect = capsule.getBoundingClientRect();
+            const rightX = rect.right;
+            const centerY = rect.top + (rect.height / 2);
+
+            // Generowanie cząsteczek wylatujących w prawo (jak iskry hamowania)
+            for (let i = 0; i < 30; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                container.appendChild(dot);
+
+                // Pozycja startowa: prawa krawędź kapsuły
+                dot.style.left = `${rightX - 20}px`; 
+                dot.style.top = `${centerY}px`;
+
+                const angle = (Math.random() - 0.5) * 2; // Spread pionowy
+                const velocity = Math.random() * 100 + 50;
+                
+                dot.animate([
+                    { transform: `translate(0, 0) scale(1)`, opacity: 1 },
+                    { transform: `translate(${velocity}px, ${angle * 50}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 600 + Math.random() * 400,
+                    easing: 'cubic-bezier(0, .9, .57, 1)'
+                }).onfinish = () => dot.remove();
+            }
+        }
+
+    </script>
+</body>
+</html>

@@ -2,647 +2,274 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ribbon Timeline Loader 40 → 100%</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet" />
+  <title>Roadmap Slide</title>
   <style>
-    :root {
-      --ing-orange: #ff6200;
-      --ing-orange-soft: #ff9b4a;
-      --ing-navy: #1f1f5f;
-      --track-bg: #f3f4f6;
-      --grid-line: rgba(31, 31, 95, 0.06);
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #ffffff;
-      color: var(--ing-navy);
-      overflow: hidden;
-      user-select: none;
-      cursor: pointer;
-    }
-
-    .stage {
-      position: relative;
-      width: 100%;
-      max-width: 900px;
-      padding: 2.5rem 1.5rem;
-    }
-
-    /* --- HERO LICZNIK --- */
-    .hero-number {
-      font-size: clamp(4.5rem, 10vw, 6.5rem);
-      font-weight: 700;
-      letter-spacing: -0.07em;
-      line-height: 0.9;
-      font-variant-numeric: tabular-nums;
-      background: linear-gradient(120deg, #1f1f5f 10%, #4b4b87 60%, #9ca3af 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      transition: transform 0.12s ease, filter 0.2s ease, background 0.4s ease;
-    }
-
-    .hero-number.final {
-      background: linear-gradient(135deg, var(--ing-orange) 0%, var(--ing-orange-soft) 40%, #ffd3a3 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      transform: scale(1.05);
-      filter: drop-shadow(0 10px 25px rgba(255, 98, 0, 0.35));
-    }
-
-    /* --- GŁÓWNA TAŚMA --- */
-    .timeline-shell {
-      position: relative;
-      margin-top: 1.75rem;
-    }
-
-    .timeline-track {
-      position: relative;
-      height: 3.75rem;
-      border-radius: 9999px;
-      background: var(--track-bg);
-      overflow: hidden;
-      box-shadow: inset 0 2px 6px rgba(15, 23, 42, 0.06);
-    }
-
-    /* Siatka w tle */
-    .timeline-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 40%);
-      background-size: 42px 100%, 100% 100%;
-      opacity: 0.7;
-      pointer-events: none;
-      mix-blend-mode: multiply;
-    }
-
-    /* Wypełniona taśma */
-    .timeline-fill {
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 40%;
-      border-radius: 9999px;
-      background: linear-gradient(90deg, #1f1f5f 0%, #39408a 40%, var(--ing-orange) 100%);
-      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.03), 0 16px 40px rgba(15, 23, 42, 0.15);
-      transform-origin: left center;
-      will-change: width;
-    }
-
-    .timeline-fill.complete {
-      animation: ribbon-breathe 2.4s ease-in-out infinite;
-    }
-
-    @keyframes ribbon-breathe {
-      0%, 100% {
-        transform: scaleY(1);
-        box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.03), 0 16px 40px rgba(15, 23, 42, 0.15);
-      }
-      50% {
-        transform: scaleY(1.04);
-        box-shadow: 0 22px 55px rgba(255, 98, 0, 0.45);
-      }
-    }
-
-    /* Refleks przesuwający się po taśmie */
-    .timeline-fill::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.7) 50%, transparent 100%);
-      transform: translateX(-120%);
-      animation: shimmer 2.7s infinite;
-      mix-blend-mode: screen;
-      pointer-events: none;
-    }
-
-    .timeline-fill.complete::after {
-      animation-duration: 1.7s;
-    }
-
-    @keyframes shimmer {
-      100% {
-        transform: translateX(120%);
-      }
-    }
-
-    /* Kapsuła z bieżącą wartością */
-    .cursor-pill {
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      padding: 0.35rem 0.8rem;
-      border-radius: 9999px;
-      background: #ffffff;
-      color: var(--ing-navy);
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
-      white-space: nowrap;
-      z-index: 20;
-    }
-
-    .cursor-pill-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 9999px;
-      background: radial-gradient(circle at 30% 30%, #ffffff, var(--ing-orange));
-      box-shadow: 0 0 0 3px rgba(255, 98, 0, 0.45);
-    }
-
-    .cursor-pill.final {
-      background: linear-gradient(135deg, #ffffff, #fff4eb);
-      box-shadow: 0 15px 40px rgba(255, 98, 0, 0.35);
-    }
-
-    /* MAŁE PUNKTY MILESTONES NA OSI */
-    .milestones-strip {
-      position: relative;
-      margin-top: 0.85rem;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: #9ca3af;
-    }
-
-    .milestone {
-      position: absolute;
-      top: 0;
-      transform: translateX(-50%);
-      text-align: center;
-    }
-
-    .milestone-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 9999px;
-      background: #d1d5db;
-      margin: 0 auto 0.25rem;
-    }
-
-    .milestone-line {
-      width: 1px;
-      height: 12px;
-      background: linear-gradient(to bottom, #cbd5e1, transparent);
-      margin: 0 auto 0.25rem;
-    }
-
-    .milestone-label-main {
-      font-weight: 600;
-      color: #6b7280;
-    }
-
-    .milestone-label-sub {
-      font-weight: 500;
-      font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      opacity: 0.8;
-    }
-
-    .milestone.active .milestone-dot {
-      background: var(--ing-orange);
-      box-shadow: 0 0 0 4px rgba(255, 98, 0, 0.25);
-    }
-
-    .milestone.active .milestone-label-main {
-      color: var(--ing-orange);
-    }
-
-    /* KARTY POJAWIAJĄCE SIĘ PRZY MILESTONE'ACH */
-    .milestone-card {
-      position: absolute;
-      top: 125%;
-      transform: translateX(-50%) translateY(10px) scale(0.96);
-      padding: 0.55rem 0.75rem;
-      border-radius: 0.9rem;
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      box-shadow: 0 15px 35px rgba(15, 23, 42, 0.18);
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s ease, transform 0.35s ease;
-      backdrop-filter: blur(8px);
-      white-space: nowrap;
-    }
-
-    .milestone-card span {
-      color: #4b5563;
-    }
-
-    .milestone-card strong {
-      color: var(--ing-orange);
-    }
-
-    .milestone-card.active {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0) scale(1);
-    }
-
-    /* DELIKATNE CZĄSTECZKI ŚLADU */
-    .trail-particle {
-      position: fixed;
-      width: 6px;
-      height: 3px;
-      border-radius: 9999px;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.7), rgba(255, 98, 0, 0.9));
-      pointer-events: none;
-      opacity: 0.8;
-      mix-blend-mode: screen;
-      z-index: 5;
-    }
-
-    /* FALA KOŃCOWA PO OSI X */
-    .finish-wave {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 0% 50%, rgba(255, 255, 255, 0.3), transparent 60%);
-      mix-blend-mode: screen;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .finish-wave.active {
-      animation: finish-wave-move 1.4s ease-out forwards;
-    }
-
-    @keyframes finish-wave-move {
-      0% {
-        opacity: 0.9;
-        transform: translateX(-20%);
-      }
-      100% {
-        opacity: 0;
-        transform: translateX(120%);
-      }
-    }
-
-    /* NAPIS STARTOWY */
-    .hint-text {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #9ca3af;
-      animation: hint-pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes hint-pulse {
-      0%, 100% {
-        opacity: 0.25;
-        transform: translateY(0);
-      }
-      50% {
-        opacity: 1;
-        transform: translateY(-2px);
-      }
-    }
-
-    .hint-text.hidden {
-      opacity: 0;
-      animation: none;
-      transition: opacity 0.35s ease;
-    }
-
-    /* --- LABELS POD PROGRESS BAREM (NOWE) --- */
-    #labelsStack {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-    }
-
-    .labels-stack-item {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f3f4f7;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      gap: 0.75rem;
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.85rem;
-      background: #ffffff;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity 0.35s ease, transform 0.35s ease;
+      height: 100vh;
     }
 
-    .labels-stack-item.visible {
-      opacity: 1;
-      transform: translateY(0);
+    /* 16:9 slide */
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background: linear-gradient(180deg, #f9fafc 0%, #e4e8f3 100%);
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+      padding: 40px 60px;
+      display: flex;
+      flex-direction: column;
     }
 
-    .labels-stack-badge {
-      padding: 0.15rem 0.45rem;
-      border-radius: 9999px;
-      border: 1px solid rgba(249, 115, 22, 0.5);
-      font-size: 0.65rem;
+    .slide-header {
+      margin-bottom: 20px;
+    }
+
+    .slide-title {
+      font-size: 32px;
       font-weight: 700;
-      letter-spacing: 0.16em;
-      color: var(--ing-orange);
-      background: #fff7ed;
+      color: #1f2933;
+      margin-bottom: 6px;
     }
 
-    .labels-stack-main {
-      font-weight: 600;
-      color: #111827;
-    }
-
-    .labels-stack-sub {
-      font-size: 0.63rem;
-      letter-spacing: 0.14em;
+    .slide-subtitle {
+      font-size: 18px;
       color: #6b7280;
-      text-align: right;
     }
+
+    .roadmap-wrapper {
+      flex: 1;
+      position: relative;
+      margin-top: 16px;
+      border-radius: 20px;
+      padding: 16px;
+      background: radial-gradient(circle at top left, #ffffff 0%, #e0e5f5 70%);
+      overflow: hidden;
+    }
+
+    .roadmap-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .road-main {
+      fill: none;
+      stroke: #8b93a3;
+      stroke-width: 42;
+      stroke-linecap: round;
+    }
+
+    .road-main-outline {
+      fill: none;
+      stroke: #4b5563;
+      stroke-width: 46;
+      stroke-linecap: round;
+      opacity: 0.7;
+    }
+
+    .road-center-line {
+      fill: none;
+      stroke: #f9fafb;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 20 14;
+      opacity: 0.85;
+    }
+
+    .road-branch {
+      fill: none;
+      stroke: #8b93a3;
+      stroke-width: 26;
+      stroke-linecap: round;
+    }
+
+    .road-branch-outline {
+      fill: none;
+      stroke: #4b5563;
+      stroke-width: 30;
+      stroke-linecap: round;
+      opacity: 0.7;
+    }
+
+    .stop-node {
+      fill: #ffffff;
+      stroke: #3b82f6;
+      stroke-width: 4;
+    }
+
+    .stop-node-inner {
+      fill: #3b82f6;
+      opacity: 0.9;
+    }
+
+    /* Kafelki przystanków (teksty) */
+    .stop-card {
+      position: absolute;
+      width: 210px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .stop-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+
+    .stop-card p {
+      font-size: 13px;
+      color: #4b5563;
+      line-height: 1.35;
+    }
+
+    .stop-card .step-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #2563eb;
+      margin-bottom: 2px;
+    }
+
+    /* Pozycjonowanie 5 przystanków względem krętej drogi */
+    .stop-1 { top: 64%; left: 6%; }
+    .stop-2 { top: 45%; left: 25%; }
+    .stop-3 { top: 30%; left: 43%; }
+    .stop-4 { top: 24%; left: 63%; }
+    .stop-5 { top: 35%; left: 80%; }
   </style>
 </head>
-<body class="h-screen w-screen flex items-center justify-center" onclick="startRibbonAnimation()">
-  <div class="stage relative z-10">
-    <!-- Pasek tła w rogu -->
-    <div class="pointer-events-none absolute -top-6 right-6 text-[0.65rem] uppercase tracking-[0.22em] text-slate-300">
-      40% → 100% w jednej trajektorii
-    </div>
+<body>
+  <div class="slide">
+    <header class="slide-header">
+      <div class="slide-title">Roadmap wdrożenia produktu</div>
+      <div class="slide-subtitle">Od koncepcji do skalowania – 5 kluczowych etapów</div>
+    </header>
 
-    <!-- Nagłówek / opis -->
-    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-      <div class="space-y-1">
-        <div class="text-[0.8rem] uppercase tracking-[0.26em] text-orange-500">Growth Ribbon</div>
-        <div class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900">
-          Trajektoria wyniku w jednym poziomym skoku
-        </div>
+    <div class="roadmap-wrapper">
+      <!-- Kręta droga z rozjazdami -->
+      <svg class="roadmap-svg" viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg">
+        <!-- Główna droga -->
+        <path
+          class="road-main-outline"
+          d="M 60 480 C 180 420 250 340 320 290 C 410 225 500 230 590 250 C 700 275 760 230 840 200 C 910 172 950 150 980 125"
+        />
+        <path
+          class="road-main"
+          d="M 60 480 C 180 420 250 340 320 290 C 410 225 500 230 590 250 C 700 275 760 230 840 200 C 910 172 950 150 980 125"
+        />
+        <path
+          class="road-center-line"
+          d="M 60 480 C 180 420 250 340 320 290 C 410 225 500 230 590 250 C 700 275 760 230 840 200 C 910 172 950 150 980 125"
+        />
+
+        <!-- Rozjazd 1 -->
+        <path
+          class="road-branch-outline"
+          d="M 210 430 L 270 360"
+        />
+        <path
+          class="road-branch"
+          d="M 210 430 L 270 360"
+        />
+        <circle class="stop-node" cx="270" cy="360" r="14" />
+        <circle class="stop-node-inner" cx="270" cy="360" r="7" />
+
+        <!-- Rozjazd 2 -->
+        <path
+          class="road-branch-outline"
+          d="M 330 330 L 390 260"
+        />
+        <path
+          class="road-branch"
+          d="M 330 330 L 390 260"
+        />
+        <circle class="stop-node" cx="390" cy="260" r="14" />
+        <circle class="stop-node-inner" cx="390" cy="260" r="7" />
+
+        <!-- Rozjazd 3 -->
+        <path
+          class="road-branch-outline"
+          d="M 470 270 L 530 200"
+        />
+        <path
+          class="road-branch"
+          d="M 470 270 L 530 200"
+        />
+        <circle class="stop-node" cx="530" cy="200" r="14" />
+        <circle class="stop-node-inner" cx="530" cy="200" r="7" />
+
+        <!-- Rozjazd 4 -->
+        <path
+          class="road-branch-outline"
+          d="M 640 260 L 700 190"
+        />
+        <path
+          class="road-branch"
+          d="M 640 260 L 700 190"
+        />
+        <circle class="stop-node" cx="700" cy="190" r="14" />
+        <circle class="stop-node-inner" cx="700" cy="190" r="7" />
+
+        <!-- Rozjazd 5 -->
+        <path
+          class="road-branch-outline"
+          d="M 800 225 L 860 160"
+        />
+        <path
+          class="road-branch"
+          d="M 800 225 L 860 160"
+        />
+        <circle class="stop-node" cx="860" cy="160" r="14" />
+        <circle class="stop-node-inner" cx="860" cy="160" r="7" />
+      </svg>
+
+      <!-- Kafelki opisujące 5 przystanków -->
+      <div class="stop-card stop-1">
+        <div class="step-label">Etap 1</div>
+        <h3>Diagnoza & insighty</h3>
+        <p>Analiza potrzeb użytkowników, zdefiniowanie problemu i kryteriów sukcesu.</p>
       </div>
-      <div class="flex flex-col items-end text-right text-[0.75rem] uppercase tracking-[0.26em] text-slate-400">
-        <span>Tryb odczytu</span>
-        <span class="opacity-70">kliknij, aby przyspieszyć</span>
-      </div>
-    </div>
 
-    <!-- Hero licznik -->
-    <div class="mt-8 flex items-baseline gap-2">
-      <span id="heroCounter" class="hero-number">40</span>
-      <span class="text-3xl md:text-4xl font-semibold text-orange-500">%</span>
-    </div>
-
-    <!-- Główna taśma -->
-    <div class="timeline-shell">
-      <div class="timeline-track" id="timelineTrack">
-        <div class="timeline-grid"></div>
-        <div id="timelineFill" class="timeline-fill"></div>
-        <div id="finishWave" class="finish-wave"></div>
-        <div id="cursor" class="cursor-pill" style="left: 40%">
-          <div class="cursor-pill-dot"></div>
-          <div class="flex flex-col leading-tight">
-            <span class="tracking-[0.18em] text-[0.65rem]">AKTUALNY</span>
-            <span id="pillValue" class="font-bold text-xs">40%</span>
-          </div>
-        </div>
+      <div class="stop-card stop-2">
+        <div class="step-label">Etap 2</div>
+        <h3>Projekt koncepcji</h3>
+        <p>Makiety, scenariusze użycia, wstępne założenia technologiczne i biznesowe.</p>
       </div>
 
-      <!-- Milestones strip (punkty na osi) -->
-      <div class="milestones-strip h-12 mt-3">
-        <div class="milestone" data-ms="40" style="left: 40%">
-          <div class="milestone-line"></div>
-          <div class="milestone-dot"></div>
-          <div class="milestone-label-main">Q1</div>
-          <div class="milestone-label-sub">Punkt startowy</div>
-          <div class="milestone-card"><span><strong>40%</strong> – wynik bazowy potwierdzony</span></div>
-        </div>
-        <div class="milestone" data-ms="60" style="left: 60%">
-          <div class="milestone-line"></div>
-          <div class="milestone-dot"></div>
-          <div class="milestone-label-main">Q2</div>
-          <div class="milestone-label-sub">Pierwsze usprawnienia</div>
-          <div class="milestone-card"><span><strong>60%</strong> – próg trwałej poprawy</span></div>
-        </div>
-        <div class="milestone" data-ms="80" style="left: 80%">
-          <div class="milestone-line"></div>
-          <div class="milestone-dot"></div>
-          <div class="milestone-label-main">Q3</div>
-          <div class="milestone-label-sub">Skalowanie</div>
-          <div class="milestone-card"><span><strong>80%</strong> – nowa strefa komfortu</span></div>
-        </div>
-        <div class="milestone" data-ms="100" style="left: 100%">
-          <div class="milestone-line"></div>
-          <div class="milestone-dot"></div>
-          <div class="milestone-label-main">Q4</div>
-          <div class="milestone-label-sub">Cel końcowy</div>
-          <div class="milestone-card"><span><strong>100%</strong> – docelowy standard pracy</span></div>
-        </div>
+      <div class="stop-card stop-3">
+        <div class="step-label">Etap 3</div>
+        <h3>MVP & testy</h3>
+        <p>Budowa MVP, testy z użytkownikami, szybkie iteracje i korekty.</p>
       </div>
 
-      <!-- STACK LABELI POD PROGRESS BAREM (NOWE) -->
-      <div id="labelsStack" class="mt-6 space-y-2"></div>
-    </div>
+      <div class="stop-card stop-4">
+        <div class="step-label">Etap 4</div>
+        <h3>Wdrożenie pilotażowe</h3>
+        <p>Rollout do pierwszej grupy, wskaźniki adopcji i feedback jakościowy.</p>
+      </div>
 
-    <!-- Napis startowy -->
-    <div id="hint" class="mt-10 text-center hint-text">
-      Kliknij w dowolne miejsce, aby zobaczyć skok z 40% do 100%
+      <div class="stop-card stop-5">
+        <div class="step-label">Etap 5</div>
+        <h3>Skalowanie & rozwój</h3>
+        <p>Rozszerzenie na kolejne segmenty, optymalizacja i roadmapa wersji 2.0.</p>
+      </div>
     </div>
   </div>
-
-  <div id="trail-layer" class="pointer-events-none fixed inset-0 z-0"></div>
-
-  <script>
-    const CONFIG = {
-      start: 40,
-      end: 100,
-      duration: 1900,
-    };
-
-    let isAnimating = false;
-    let isFinished = false;
-
-    const heroCounter = document.getElementById('heroCounter');
-    const pillValue = document.getElementById('pillValue');
-    const fill = document.getElementById('timelineFill');
-    const cursor = document.getElementById('cursor');
-    const hint = document.getElementById('hint');
-    const finishWave = document.getElementById('finishWave');
-    const timelineTrack = document.getElementById('timelineTrack');
-    const trailLayer = document.getElementById('trail-layer');
-    const labelsStack = document.getElementById('labelsStack'); // NEW
-
-    const milestones = Array.from(document.querySelectorAll('.milestone'));
-
-    const triggeredCards = {
-      40: false,
-      60: false,
-      80: false,
-      100: false,
-    };
-
-    function easeOutExpo(x) {
-      return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
-    }
-
-    function startRibbonAnimation() {
-      if (isAnimating || isFinished) return;
-      isAnimating = true;
-      if (hint) hint.classList.add('hidden');
-
-      // małe cofnięcie taśmy dla "napięcia"
-      fill.style.transition = 'width 380ms cubic-bezier(0.7, 0, 0.4, 1)';
-      fill.style.width = '36%';
-      heroCounter.style.transform = 'scale(0.96)';
-      heroCounter.style.filter = 'blur(0.5px)';
-
-      setTimeout(() => {
-        heroCounter.style.transform = 'scale(1)';
-        heroCounter.style.filter = 'blur(0)';
-
-        // właściwa animacja
-        animateRibbon();
-      }, 380);
-    }
-
-    function animateRibbon() {
-      const startTime = performance.now();
-      fill.style.transition = 'none';
-
-      function step(now) {
-        const elapsed = now - startTime;
-        const rawProgress = Math.min(elapsed / CONFIG.duration, 1);
-        const eased = easeOutExpo(rawProgress);
-
-        const current = CONFIG.start + eased * (CONFIG.end - CONFIG.start);
-        const rounded = Math.floor(current);
-
-        heroCounter.textContent = rounded;
-        pillValue.textContent = rounded + '%';
-
-        fill.style.width = current + '%';
-        cursor.style.left = current + '%';
-
-        maybeSpawnTrail(current);
-        updateMilestones(current);
-
-        if (rawProgress < 1) {
-          requestAnimationFrame(step);
-        } else {
-          finalizeRibbon();
-        }
-      }
-
-      requestAnimationFrame(step);
-    }
-
-    function updateMilestones(currentValue) {
-      milestones.forEach((ms) => {
-        const value = Number(ms.dataset.ms);
-        if (!triggeredCards[value] && currentValue >= value) {
-          triggeredCards[value] = true;
-
-          ms.classList.add('active');
-          const card = ms.querySelector('.milestone-card');
-          if (card) {
-            card.classList.add('active');
-          }
-
-          // NOWE: dodaj label pod progress bar
-          addLabelForMilestone(ms, value);
-        }
-      });
-    }
-
-    function addLabelForMilestone(ms, value) {
-      if (!labelsStack) return;
-
-      const main = ms.querySelector('.milestone-label-main')?.textContent?.trim() || '';
-      const sub = ms.querySelector('.milestone-label-sub')?.textContent?.trim() || '';
-      const cardText = ms.querySelector('.milestone-card span')?.textContent?.trim() || '';
-
-      const item = document.createElement('div');
-      item.className = 'labels-stack-item';
-
-      item.innerHTML = `
-        <div class="flex items-center gap-2">
-          <span class="labels-stack-badge">${value}%</span>
-          <span class="labels-stack-main">${main}</span>
-        </div>
-        <div class="labels-stack-sub">
-          ${sub || cardText}
-        </div>
-      `;
-
-      labelsStack.appendChild(item);
-
-      // wymuszenie reflow + klasa visible dla ładnej animacji
-      requestAnimationFrame(() => {
-        item.classList.add('visible');
-      });
-    }
-
-    function maybeSpawnTrail(currentValue) {
-      if (Math.random() > 0.7) {
-        const trackRect = timelineTrack.getBoundingClientRect();
-        const x = trackRect.left + (currentValue / 100) * trackRect.width;
-        const y = trackRect.top + trackRect.height / 2;
-
-        const p = document.createElement('div');
-        p.className = 'trail-particle';
-        p.style.left = x + 'px';
-        p.style.top = y + 'px';
-        trailLayer.appendChild(p);
-
-        const dx = -30 - Math.random() * 25;
-        const dy = (Math.random() - 0.5) * 12;
-        const duration = 320 + Math.random() * 200;
-
-        const anim = p.animate(
-          [
-            { transform: 'translate(0,0) scaleX(1)', opacity: 0.9 },
-            { transform: 'translate(' + dx + 'px,' + dy + 'px) scaleX(0.2)', opacity: 0 },
-          ],
-          {
-            duration,
-            easing: 'cubic-bezier(0.11, 0.76, 0.46, 0.99)',
-          }
-        );
-
-        anim.onfinish = () => p.remove();
-      }
-    }
-
-    function finalizeRibbon() {
-      isAnimating = false;
-      isFinished = true;
-
-      heroCounter.textContent = '100';
-      pillValue.textContent = '100%';
-      heroCounter.classList.add('final');
-      cursor.classList.add('final');
-      fill.classList.add('complete');
-
-      const cursorLabel = cursor.querySelector('span');
-      if (cursorLabel) cursorLabel.textContent = 'CEL';
-
-      finishWave.classList.remove('active');
-      void finishWave.offsetWidth;
-      finishWave.classList.add('active');
-
-      const flash = document.createElement('div');
-      flash.style.position = 'fixed';
-      flash.style.inset = '0';
-      flash.style.background = 'rgba(255,255,255,0.75)';
-      flash.style.pointerEvents = 'none';
-      flash.style.zIndex = '20';
-      document.body.appendChild(flash);
-
-      requestAnimationFrame(() => {
-        flash.style.transition = 'opacity 600ms ease-out';
-        flash.style.opacity = '0';
-        setTimeout(() => flash.remove(), 650);
-      });
-    }
-  </script>
 </body>
 </html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minimal 40 → 100 Loader (Improved)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ing-orange: #FF6200;
+      --ing-navy: #1F1F5F;
+      --track: #E5E7EB;
+    }
+
+    body {
+      font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #FFFFFF;
+      color: var(--ing-navy);
+      overflow: hidden;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    /* --- KAPSUŁA ENERGII --- */
+    .loader-pill {
+      position: absolute;
+      left: 40%;
+      top: 50%;
+      transform: translateY(-50%);
+      transform-origin: left center;
+      width: 0%;
+      height: 0.75rem; /* h-3 */
+      border-radius: 9999px;
+      background: var(--ing-orange);
+      box-shadow: 0 0 0 0 rgba(255, 98, 0, 0);
+      transition: box-shadow 0.5s ease-out;
+    }
+
+    @media (min-width: 640px) {
+      .loader-pill {
+        height: 1rem; /* sm:h-4 */
+      }
+    }
+
+    .loader-pill--active {
+      box-shadow: 0 0 16px rgba(255, 98, 0, 0.35);
+    }
+
+    /* subtelny shimmer wewnątrz paska w ruchu */
+    .loader-pill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.45) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: translateX(-100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-pill--moving::after {
+      opacity: 1;
+      animation: shimmer 1.9s infinite;
+    }
+
+    @keyframes shimmer {
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    /* końcowy „oddech” przy 100% – bez przesunięcia pozycji */
+    .pill-finish {
+      animation: pillFinish 0.9s ease-out forwards;
+    }
+
+    @keyframes pillFinish {
+      0%   { transform: translateY(-50%) scaleX(1); }
+      40%  { transform: translateY(-50%) scaleX(1.06); }
+      100% { transform: translateY(-50%) scaleX(1); }
+    }
+
+    .hint {
+      animation: hintPulse 2s infinite;
+    }
+
+    @keyframes hintPulse {
+      0%, 100% { opacity: 0.35; }
+      50%      { opacity: 0.9; }
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex items-center justify-center" onclick="startLoader()">
+
+  <div class="w-full max-w-3xl px-6">
+    <!-- top label -->
+    <div class="flex items-center justify-between text-xs uppercase tracking-[0.25em] text-gray-400 mb-6">
+      <span>Wzrost efektywności</span>
+      <span class="flex items-center gap-2">
+        <span class="hidden sm:inline">40% → 100%</span>
+        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+        <span id="hint" class="hint">kliknij, aby uruchomić</span>
+      </span>
+    </div>
+
+    <!-- wartość docelowa po prawej, bazowa po lewej -->
+    <div class="flex items-end justify-between mb-3">
+      <div class="flex flex-col">
+        <span class="text-[0.7rem] uppercase tracking-[0.22em] text-gray-400 mb-1">
+          Punkt startowy
+        </span>
+        <span class="text-2xl font-semibold text-gray-500">
+          40<span class="text-sm align-super ml-0.5">%</span>
+        </span>
+      </div>
+
+      <div class="flex flex-col items-end">
+        <span class="text-[0.7rem] uppercase tracking-[0.22em] text-gray-400 mb-1">
+          Stan docelowy
+        </span>
+        <div class="flex items-baseline gap-1">
+          <span id="headline-value" class="text-3xl font-semibold tabular-nums text-gray-800">
+            40
+          </span>
+          <span class="text-sm font-semibold text-orange-500">%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRACK -->
+    <div id="track" class="relative h-3 sm:h-4">
+      <!-- pełny, lekki track -->
+      <div class="absolute inset-y-1/2 -translate-y-1/2 w-full h-[1px] bg-[var(--track)] rounded-full"></div>
+
+      <!-- ghost track do 40% (ciemniejszy "history") -->
+      <div
+        class="absolute inset-y-1/2 -translate-y-1/2 h-[2px] bg-[var(--ing-navy)]/40 rounded-full"
+        style="width: 40%;"
+      ></div>
+
+      <!-- kapsułka od 40% do 100% -->
+      <div id="pill" class="loader-pill"></div>
+
+      <!-- wskaźnik (kropka) dokładnie w punkcie, wysunięta delikatnie ponad linię -->
+      <div
+        id="marker"
+        class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full border border-orange-400 bg-white shadow-sm"
+        style="left: 40%;"
+      ></div>
+
+      <!-- chmurka z aktualnym % -->
+      <div
+        id="bubble"
+        class="absolute -top-6 px-2 py-0.5 text-[0.65rem] rounded-full border border-gray-200 bg-white shadow-sm text-gray-500
+               -translate-x-1/2 opacity-0 transition-opacity duration-300"
+        style="left: 40%;"
+      >
+        40%
+      </div>
+    </div>
+
+    <!-- podpis osi czasu -->
+    <div class="flex justify-between text-[0.7rem] text-gray-400 mt-3">
+      <span>Q1 2024</span>
+      <span id="right-caption" class="transition-colors duration-500">Q4 2024</span>
+    </div>
+  </div>
+
+  <script>
+    const CONFIG = {
+      start: 40,
+      end: 100,
+      duration: 1800 // ms
+    };
+
+    let isRunning = false;
+    let isFinished = false;
+
+    const pill           = document.getElementById('pill');
+    const marker         = document.getElementById('marker');
+    const bubble         = document.getElementById('bubble');
+    const headlineValue  = document.getElementById('headline-value');
+    const hintEl         = document.getElementById('hint');
+    const rightCaption   = document.getElementById('right-caption');
+
+    function easeOutExpo(t) {
+      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    }
+
+    function startLoader() {
+      if (isRunning || isFinished) return;
+      isRunning = true;
+
+      // UI: wycisz hint, pokaż chmurkę, aktywuj glow / shimmer
+      hintEl.style.opacity = '0';
+      bubble.style.opacity = '1';
+      pill.classList.add('loader-pill--active', 'loader-pill--moving');
+
+      const startTime = performance.now();
+
+      function frame(now) {
+        const elapsed     = now - startTime;
+        const rawProgress = Math.min(elapsed / CONFIG.duration, 1);
+        const t           = easeOutExpo(rawProgress);
+
+        const current = CONFIG.start + (CONFIG.end - CONFIG.start) * t;
+        const delta   = current - CONFIG.start;
+
+        // szerokość kapsuły od 40% → X%
+        pill.style.width = `${Math.max(delta, 0)}%`;
+
+        // marker & chmurka jadą od 40% do 100%
+        const pos = current;
+        marker.style.left = `${pos}%`;
+        bubble.style.left = `${pos}%`;
+
+        const rounded = Math.floor(current);
+        bubble.textContent = `${rounded}%`;
+        headlineValue.textContent = rounded.toString().padStart(2, '0');
+
+        if (rawProgress < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          finishLoader();
+        }
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    function finishLoader() {
+      isRunning  = false;
+      isFinished = true;
+
+      // stan końcowy
+      headlineValue.textContent = '100';
+      bubble.textContent        = '100%';
+
+      // delikatny „oddech” kapsuły i zatrzymanie shimmera
+      pill.classList.remove('loader-pill--moving');
+      pill.classList.add('pill-finish');
+
+      // marker trochę mniej wyraźny, a podpis po prawej na pomarańczowo
+      marker.style.borderColor      = '#E5E7EB';
+      rightCaption.style.color      = '#FF6200';
+
+      // schowanie chmurki po krótkiej chwili
+      setTimeout(() => {
+        bubble.style.opacity = '0';
+      }, 900);
+    }
+  </script>
+</body>
+</html>
