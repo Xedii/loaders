@@ -20,7 +20,7 @@
             color: var(--secondary);
             overflow: hidden;
             user-select: none;
-            cursor: pointer;
+            cursor: default;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -31,7 +31,7 @@
         /* --- GRID BACKGROUND (Parallax effect) --- */
         .grid-bg {
             position: absolute;
-            inset: -50%; /* Większy, aby coverował ruch */
+            inset: -50%;
             width: 200%;
             height: 200%;
             background-image: 
@@ -61,23 +61,38 @@
             align-items: center;
         }
 
+        /* --- PAGE TITLE --- */
+        .page-title {
+            margin-bottom: 1.5rem;
+            font-size: clamp(1.5rem, 3vw, 2.25rem);
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            text-align: center;
+            color: var(--secondary);
+        }
+
+        .page-title span {
+            color: var(--primary);
+        }
+
         /* --- TYPOGRAPHY & LABELS --- */
         .percent-display-wrapper {
             position: relative;
             margin-bottom: 2rem;
             display: flex;
-            align-items: flex-start; /* Aligned to the top for the percent sign */
+            align-items: flex-start;
             justify-content: center;
             width: 100%;
         }
 
         .percent-display {
-            font-size: clamp(6rem, 15vw, 12rem); /* Dynamiczny rozmiar */
+            font-size: clamp(6rem, 15vw, 12rem);
             font-weight: 700;
             line-height: 0.8;
             letter-spacing: -0.05em;
             font-variant-numeric: tabular-nums;
-            color: var(--secondary);
+            color: var(--primary);  /* numerek pomarańczowy */
             position: relative;
             transition: color 0.3s;
         }
@@ -86,10 +101,10 @@
             content: '%';
             font-size: clamp(2rem, 5vw, 4rem);
             margin-left: 0.5rem;
-            color: var(--primary);
-            vertical-align: super; /* Wyżej niż baseline */
+            color: var(--secondary); /* % niebieski */
+            vertical-align: super;
             line-height: 1;
-            transform: translateY(10%); /* Minimalne dopasowanie */
+            transform: translateY(10%);
         }
         
         .percent-display.is-finished-color {
@@ -102,7 +117,7 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            margin-top: 2.5rem; /* Odstęp od paska */
+            margin-top: 2.5rem;
             opacity: 1;
             transition: opacity 0.5s;
             font-size: 1.1rem;
@@ -117,8 +132,13 @@
             padding: 0 2rem;
         }
 
-        .comparison-item.initial .value { color: #9CA3AF; }
-        .comparison-item.final .value { color: var(--primary); font-weight: 700; transform: scale(1.1); }
+        .comparison-item.initial .value { color: #6B7280; }
+        .comparison-item.final .value { 
+            color: var(--primary); 
+            font-weight: 700; 
+            transform: scale(1.1); 
+        }
+
         .comparison-item .label {
             font-size: 0.75rem;
             letter-spacing: 0.1em;
@@ -126,20 +146,22 @@
             color: #9CA3AF;
             margin-bottom: 0.25rem;
         }
+
         .comparison-item .value {
             font-size: 1.75rem;
             font-weight: 700;
             color: var(--secondary);
             transition: all 0.5s;
         }
+
         .comparison-arrow {
             font-size: 2rem;
             color: #CBD5E1;
             margin: 0 1.5rem;
             transition: color 0.5s;
         }
-        .comparison-arrow.active { color: var(--primary); }
 
+        .comparison-arrow.active { color: var(--primary); }
 
         /* --- THE TRACK --- */
         .track {
@@ -157,8 +179,8 @@
             left: 0;
             top: 50%;
             transform: translateY(-50%);
-            height: 16px; /* Grubszy niż track */
-            width: 40%;   /* Startowa szerokość */
+            height: 16px;
+            width: 32%;   /* Startowa szerokość = wartość 2024 */
             background: var(--secondary);
             border-radius: 8px;
             box-shadow: 0 0 0 0 rgba(31, 31, 95, 0);
@@ -166,7 +188,7 @@
             z-index: 2;
         }
 
-        /* --- GLITCH EFFECT AT 40% --- */
+        /* --- GLITCH EFFECT AT START --- */
         .beam.glitchy {
             background: repeating-linear-gradient(
                 90deg,
@@ -193,7 +215,7 @@
             background: #fff;
             box-shadow: 0 0 15px 2px var(--primary);
             z-index: 3;
-            opacity: 0; /* Ukryte na starcie, pojawia się w ruchu */
+            opacity: 0;
             transition: opacity 0.2s;
         }
 
@@ -207,14 +229,23 @@
             background: #CBD5E1;
             z-index: 1;
         }
-        .marker-start { left: 40%; }
-        .marker-end { right: 0; height: 30px; width: 2px; background: var(--primary); opacity: 0.5; }
+
+        /* Startowa wartość = 32% (2024) */
+        .marker-start { left: 32%; }
+
+        .marker-end { 
+            right: 0; 
+            height: 30px; 
+            width: 2px; 
+            background: var(--primary); 
+            opacity: 0.5; 
+        }
 
         /* --- ANIMATION STATES --- */
         .is-accelerating .beam {
-            height: 8px; /* Zwęża się przy prędkości */
+            height: 8px;
             border-radius: 0 4px 4px 0;
-            background: var(--primary); /* Zmienia kolor na "energię" */
+            background: var(--primary);
             box-shadow: 0 0 20px rgba(255, 98, 0, 0.4);
         }
 
@@ -222,11 +253,19 @@
 
         .is-finished .beam {
             height: 16px;
-            background: var(--primary); /* Finalny kolor sukcesu */
+            background: var(--primary);
             box-shadow: 0 0 30px rgba(255, 98, 0, 0.3);
         }
 
         .is-finished .beam-head { opacity: 0; }
+
+        /* --- SHAKE ANIMATION (finish) --- */
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
 
         /* --- DATA PARTICLES (Bits flying) --- */
         .data-bit {
@@ -236,20 +275,6 @@
             opacity: 0;
         }
 
-        /* --- UI OVERLAYS --- */
-        .cta-overlay {
-            position: absolute;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.75rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: #9CA3AF;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 50% { opacity: 0.3; } }
-
     </style>
 </head>
 <body>
@@ -258,8 +283,12 @@
 
     <div class="loader-container">
         
+        <h1 class="page-title">
+            OT charging <span>improvments</span>
+        </h1>
+
         <div class="percent-display-wrapper">
-            <div id="counter" class="percent-display">40</div>
+            <div id="counter" class="percent-display">32</div>
         </div>
 
         <div class="track">
@@ -273,13 +302,13 @@
         
         <div class="comparison-section">
             <div class="comparison-item initial">
-                <span class="label">Punkt Startowy</span>
-                <span id="initial-value" class="value">40%</span>
+                <span class="label">Było (2024)</span>
+                <span id="initial-value" class="value">32%</span>
             </div>
             <span id="arrow-icon" class="comparison-arrow">→</span>
-            <div class="comparison-item final">
-                <span class="label">Osiągnięliśmy</span>
-                <span id="final-value" class="value"></span> 
+            <div class="comparison-item" id="final-item">
+                <span class="label">Jest (2025)</span>
+                <span id="final-value" class="value">--</span> 
             </div>
         </div>
 
@@ -287,12 +316,10 @@
 
     </div>
 
-    <div id="cta" class="cta-overlay">Kliknij, aby uruchomić symulację</div>
-
     <script>
         const CONFIG = {
-            start: 40,
-            end: 100,
+            start: 32,
+            end: 84,
             duration: 2200 // ms
         };
 
@@ -303,19 +330,19 @@
         const grid = document.getElementById('grid');
         const initialValueDisplay = document.getElementById('initial-value');
         const finalValueDisplay = document.getElementById('final-value');
+        const finalItem = document.getElementById('final-item');
         const arrowIcon = document.getElementById('arrow-icon');
-        const cta = document.getElementById('cta');
         const particlesLayer = document.getElementById('particles-layer');
 
         // Initial setup for comparison section
         initialValueDisplay.innerText = `${CONFIG.start}%`;
-        finalValueDisplay.innerText = `--`; // Empty until finished
+        finalValueDisplay.innerText = `--`;
 
         // Funkcja "Scramble" dla tekstu (efekt dekodowania)
         const chars = "0123456789";
         function scrambleText(element, finalValue, duration = 300) {
             let iterations = 0;
-            const scrambleInterval = 50; // Szybkość zmiany znaków
+            const scrambleInterval = 50;
             const totalIterations = duration / scrambleInterval;
 
             const interval = setInterval(() => {
@@ -333,30 +360,28 @@
             }, scrambleInterval);
         }
 
-        document.body.addEventListener('click', () => {
+        function startSimulation() {
             if (isActive) return;
             isActive = true;
 
-            // 1. UI Cleanup
-            cta.style.opacity = 0;
             grid.classList.add('grid-active');
             
-            // 2. Przygotowanie do skoku (Lekkie cofnięcie)
+            // Przygotowanie do skoku (Lekkie cofnięcie)
             beam.style.transition = "width 0.4s cubic-bezier(0.4, 0, 1, 1)";
-            beam.style.width = "35%"; 
+            beam.style.width = "28%"; 
             
-            // 3. START WŁAŚCIWY
+            // START WŁAŚCIWY
             setTimeout(() => {
                 beam.classList.remove('glitchy');
                 document.body.classList.add('is-accelerating');
                 
-                beam.style.transition = `width ${CONFIG.duration}ms cubic-bezier(0.22, 1, 0.36, 1)`; // Custom easing
+                beam.style.transition = `width ${CONFIG.duration}ms cubic-bezier(0.22, 1, 0.36, 1)`;
                 
                 startProgress();
                 spawnDataStream();
                 
             }, 400);
-        });
+        }
 
         function startProgress() {
             const startTime = performance.now();
@@ -373,7 +398,6 @@
                 const currentVal = CONFIG.start + (ease * (CONFIG.end - CONFIG.start));
                 
                 // Aktualizacja licznika:
-                // Wyłączamy scramble pod sam koniec (progress > 0.9), żeby liczby nie skakały przed 100
                 if ((progress < 0.2 && Math.random() > 0.7) || (progress > 0.8 && progress < 0.9 && Math.random() > 0.6)) {
                     scrambleText(counter, Math.floor(currentVal), 100); 
                 } else {
@@ -395,22 +419,22 @@
             document.body.classList.remove('is-accelerating');
             document.body.classList.add('is-finished');
             
-            // Ustawiamy sztywno 100 na koniec
-            counter.innerText = "100";
+            // Ustawiamy sztywno 84 na koniec
+            counter.innerText = String(CONFIG.end);
             counter.classList.add('is-finished-color');
             
             // Odbicie końcowe (Over-shoot)
             beam.style.transition = "width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)";
-            beam.style.width = "100.5%";
+            beam.style.width = (CONFIG.end + 0.5) + "%";
             setTimeout(() => { 
-                beam.style.width = "100%"; 
+                beam.style.width = CONFIG.end + "%"; 
                 // Po zatrzaśnięciu, finalizujemy stan "było/jest"
                 finalValueDisplay.innerText = `${CONFIG.end}%`;
-                finalValueDisplay.closest('.comparison-item').classList.add('final');
+                finalItem.classList.add('final');
                 arrowIcon.classList.add('active');
             }, 300);
 
-            grid.style.transform = "perspective(500px) rotateX(0deg) translateY(0)"; // Reset grid
+            grid.style.transform = "perspective(500px) rotateX(0deg) translateY(0)";
 
             // Efekt końcowy (krótkie potrząśnięcie)
             document.body.style.animation = 'shake 0.3s cubic-bezier(.36,.07,.19,.97) both';
@@ -450,6 +474,10 @@
             }, 50); 
         }
 
+        // Auto-start po 1 sekundzie od załadowania strony
+        window.addEventListener('load', () => {
+            setTimeout(startSimulation, 1000);
+        });
     </script>
 </body>
 </html>
