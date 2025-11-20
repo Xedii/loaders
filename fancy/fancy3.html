@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Accelerator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ing-orange: #FF6200;
+            --ing-navy: #1F1F5F;
+            --track-bg: #F3F4F6;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #FFFFFF;
+            color: var(--ing-navy);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        /* --- GŁÓWNY KONTENER --- */
+        .loader-stage {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        /* --- TYPOGRAFIA --- */
+        .stat-display {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .stat-value {
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            font-variant-numeric: tabular-nums;
+            transition: color 0.3s, transform 0.1s;
+        }
+
+        .stat-unit {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #9CA3AF;
+            margin-left: 0.5rem;
+            transform: translateY(-1rem);
+        }
+
+        .stat-label {
+            position: absolute;
+            right: 0;
+            bottom: 10px;
+            text-align: right;
+        }
+
+        .stat-main-text {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--ing-navy);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-sub-text {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-top: 4px;
+        }
+
+        /* --- TUNEL / PASEK --- */
+        .track-container {
+            position: relative;
+            height: 64px;
+            background: var(--track-bg);
+            border-radius: 8px;
+            overflow: visible; /* Zmienione na visible, by etykiety mogły wystawać */
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        /* Linie siatki w tle paska (Grid) */
+        .track-grid {
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background-image: linear-gradient(90deg, rgba(31, 31, 95, 0.05) 1px, transparent 1px);
+            background-size: 40px 100%;
+            opacity: 0.5;
+        }
+
+        /* Wypełnienie (Ciecz/Energia) */
+        .progress-bar {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 40%; /* Start */
+            background: var(--ing-navy);
+            transform-origin: left center;
+            border-radius: 8px 0 0 8px;
+            will-change: width, transform;
+            z-index: 2;
+        }
+
+        /* Głowica (Photon Head) */
+        .progress-head {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #fff;
+            box-shadow: 0 0 20px 5px var(--ing-orange);
+            z-index: 10;
+        }
+        
+        .progress-glow {
+            position: absolute;
+            right: 0; top: 0; bottom: 0;
+            width: 100px;
+            background: linear-gradient(90deg, transparent, var(--ing-orange));
+            opacity: 0.6;
+            mix-blend-mode: overlay;
+        }
+
+        /* --- MARKERY (BYŁO vs JEST) --- */
+        
+        /* Marker startowy (Było X) */
+        .ghost-marker {
+            position: absolute;
+            left: 40%;
+            top: -10px;
+            bottom: -10px;
+            width: 2px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #9CA3AF,
+                #9CA3AF 4px,
+                transparent 4px,
+                transparent 8px
+            );
+            z-index: 1;
+            opacity: 0.5;
+        }
+        
+        .ghost-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: #9CA3AF;
+            white-space: nowrap;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Marker końcowy (Jest Y) */
+        .target-marker {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 12px;
+            width: 12px;
+            border: 2px solid #CBD5E1;
+            border-radius: 50%;
+            z-index: 5;
+            transition: all 0.3s;
+        }
+
+        .target-hit {
+            border-color: var(--ing-orange);
+            background: var(--ing-orange);
+            box-shadow: 0 0 0 4px rgba(255, 98, 0, 0.2);
+        }
+
+        /* --- EFEKTY --- */
+        .blur-active { filter: blur(4px) skewX(-10deg); opacity: 0.8; }
+        
+        .text-blur {
+            animation: text-shake 0.8s ease-in-out;
+            color: var(--ing-orange);
+        }
+
+        @keyframes text-shake {
+            0% { transform: translate(0,0); }
+            20% { transform: translate(-2px, 0) skewX(-5deg); filter: blur(1px); }
+            80% { transform: translate(2px, 0) skewX(5deg); filter: blur(1px); }
+            100% { transform: translate(0,0); filter: blur(0); }
+        }
+
+        .spark {
+            position: absolute;
+            background: var(--ing-orange);
+            width: 4px; height: 2px;
+            pointer-events: none;
+            border-radius: 2px;
+        }
+
+        .pulse-finish { animation: finish-pulse 1.5s infinite; }
+        @keyframes finish-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 98, 0, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 98, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 98, 0, 0); }
+        }
+        
+        .instruction-text {
+            position: absolute;
+            bottom: 2rem;
+            width: 100%;
+            text-align: center;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #9CA3AF;
+            animation: pulse-text 2s infinite;
+        }
+        @keyframes pulse-text { 50% { opacity: 0.5; } }
+
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col items-center justify-center">
+
+    <div class="loader-stage z-10">
+        
+        <!-- Nagłówek z liczbą -->
+        <div class="stat-display">
+            <span id="counter" class="stat-value">40</span>
+            <span class="stat-unit">%</span>
+            <div class="stat-label">
+                <span id="main-label" class="stat-main-text">Wynik Bazowy</span>
+                <span id="sub-label" class="stat-sub-text">Rok 2023</span>
+            </div>
+        </div>
+
+        <!-- Pasek (Tunel) -->
+        <div class="track-container" id="track">
+            <div class="track-grid"></div>
+            
+            <!-- Marker Startowy (Duch "Przeszłości") -->
+            <div class="ghost-marker">
+                <div class="ghost-label">Poprzednio</div>
+            </div>
+
+            <!-- Marker Końcowy -->
+            <div id="target" class="target-marker"></div>
+
+            <!-- Pasek Postępu -->
+            <div id="bar" class="progress-bar">
+                <div class="progress-glow"></div>
+                <div class="progress-head"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="instruction" class="instruction-text">Kliknij, aby zoptymalizować wynik</div>
+
+    <script>
+        const CONFIG = {
+            start: 40,
+            end: 100,
+            duration: 1600 // Nieco wolniej, żeby nacieszyć oko "wzrostem"
+        };
+
+        let isAnimating = false;
+        let isFinished = false;
+
+        const bar = document.getElementById('bar');
+        const counter = document.getElementById('counter');
+        const mainLabel = document.getElementById('main-label');
+        const subLabel = document.getElementById('sub-label');
+        const targetMarker = document.getElementById('target');
+        const track = document.getElementById('track');
+        const instruction = document.getElementById('instruction');
+
+        document.body.addEventListener('click', runSequence);
+
+        function runSequence() {
+            if (isAnimating || isFinished) return;
+            isAnimating = true;
+            instruction.style.opacity = 0;
+
+            // KROK 1: Antycypacja (Naciąganie cięciwy)
+            // Zmieniamy tekst na "Analiza..." lub "Przygotowanie"
+            mainLabel.innerText = "Analiza...";
+            subLabel.innerText = "Kalibracja";
+            mainLabel.style.color = "#FF6200";
+            
+            bar.style.transition = "width 0.5s cubic-bezier(0.5, 0, 0.75, 0)";
+            bar.style.width = "35%"; // Cofnięcie
+            counter.style.transform = "scale(0.95)";
+            counter.style.opacity = "0.7"; // Lekkie przygaszenie "starego" wyniku
+            
+            setTimeout(() => {
+                // KROK 2: Wystrzał
+                bar.style.transition = "none";
+                counter.classList.add('text-blur');
+                counter.style.opacity = "1";
+                
+                // Dynamiczna zmiana tekstu w locie
+                mainLabel.innerText = "Optymalizacja";
+                subLabel.innerText = "Przetwarzanie";
+                
+                launchAnimation();
+            }, 500);
+        }
+
+        function launchAnimation() {
+            const startTime = performance.now();
+            
+            function easeOutExpo(x) {
+                return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+            }
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                let progress = Math.min(elapsed / CONFIG.duration, 1);
+                
+                const ease = easeOutExpo(progress);
+                const currentVal = CONFIG.start + (ease * (CONFIG.end - CONFIG.start));
+                
+                counter.innerText = Math.floor(currentVal);
+                bar.style.width = `${currentVal}%`;
+
+                // Efekty cząsteczkowe
+                if (progress < 0.9 && Math.random() > 0.65) {
+                    spawnSpark(bar);
+                }
+
+                // Skew (Pochylenie) zależne od prędkości
+                if (progress > 0.1 && progress < 0.8) {
+                    bar.style.filter = `skewX(${-20 * (1-progress)}deg)`; 
+                } else {
+                    bar.style.filter = `skewX(0deg)`;
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    finalize();
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        function finalize() {
+            isFinished = true;
+            isAnimating = false;
+
+            // KROK 3: Wynik końcowy (Transformacja zakończona)
+            counter.innerText = "100";
+            bar.style.width = "100%";
+            
+            // Zmiana kolorów na sukces
+            bar.style.backgroundColor = "#FF6200"; 
+            counter.classList.remove('text-blur');
+            counter.style.color = "#FF6200";
+            counter.style.transform = "scale(1.1)";
+            
+            // Aktualizacja etykiet na "NOWE"
+            mainLabel.innerText = "Nowy Standard";
+            mainLabel.style.color = "#1F1F5F";
+            subLabel.innerText = "Rok 2024";
+            subLabel.style.color = "#FF6200"; // Podkreślenie roku kolorem
+
+            // Efekty UI
+            targetMarker.classList.add('target-hit');
+            track.classList.add('pulse-finish');
+            
+            // Błysk
+            const flash = document.createElement('div');
+            flash.className = 'absolute inset-0 bg-white pointer-events-none';
+            flash.style.opacity = 0.5;
+            flash.style.transition = 'opacity 0.6s';
+            document.body.appendChild(flash);
+            
+            requestAnimationFrame(() => {
+                flash.style.opacity = 0;
+                setTimeout(() => flash.remove(), 600);
+            });
+        }
+
+        function spawnSpark(parentElement) {
+            const rect = parentElement.getBoundingClientRect();
+            const spark = document.createElement('div');
+            spark.classList.add('spark');
+            document.body.appendChild(spark);
+
+            const startX = rect.right;
+            const startY = rect.top + (Math.random() * rect.height);
+
+            spark.style.left = `${startX}px`;
+            spark.style.top = `${startY}px`;
+            
+            const velocity = 20 + Math.random() * 30;
+
+            const anim = spark.animate([
+                { transform: 'translate(0,0) scale(1)', opacity: 0.8 },
+                { transform: `translate(-${velocity * 2}px, ${(Math.random()-0.5)*20}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 400,
+                easing: 'ease-out'
+            });
+
+            anim.onfinish = () => spark.remove();
+        }
+    </script>
+</body>
+</html>
