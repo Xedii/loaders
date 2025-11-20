@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OT Charging Improvement</title>
+    <title>NL Charge Cost Assignment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
@@ -16,7 +16,7 @@
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: #FFFFFF;
+            background-color: #FFFFFF; /* jednolite białe tło */
             color: var(--secondary);
             overflow: hidden;
             user-select: none;
@@ -71,7 +71,7 @@
             line-height: 0.8;
             letter-spacing: -0.05em;
             font-variant-numeric: tabular-nums;
-            color: var(--primary);  
+            color: var(--primary);  /* numerek pomarańczowy */
             position: relative;
             transition: color 0.3s;
         }
@@ -80,7 +80,7 @@
             content: '%';
             font-size: clamp(2rem, 5vw, 4rem);
             margin-left: 0.5rem;
-            color: var(--secondary); 
+            color: var(--secondary); /* % niebieski */
             vertical-align: super;
             line-height: 1;
             transform: translateY(10%);
@@ -90,7 +90,7 @@
             color: var(--primary);
         }
 
-        /* COMPARISON SECTION */
+        /* "2023 → 2025" SECTION */
         .comparison-section {
             display: flex;
             justify-content: center;
@@ -160,8 +160,7 @@
             top: 50%;
             transform: translateY(-50%);
             height: 16px;
-            /* ZMIANA: Startowa szerokość zmieniona na 32% */
-            width: 32%;   
+            width: 70%;   /* Startowa szerokość = wartość 2023 (70%) */
             background: var(--secondary);
             border-radius: 8px;
             box-shadow: 0 0 0 0 rgba(31, 31, 95, 0);
@@ -211,8 +210,8 @@
             z-index: 1;
         }
 
-        /* ZMIANA: Startowa wartość markera zmieniona na 32% */
-        .marker-start { left: 32%; }
+        /* Startowa wartość = 70% (2023) */
+        .marker-start { left: 70%; }
 
         .marker-end { 
             right: 0; 
@@ -262,14 +261,12 @@
 
     <div class="loader-container">
         
-        <!-- ZMIANA: Nowy tytuł -->
         <h1 class="page-title">
-            OT charging <span>improvement</span>
+            NL charge cost <span>assignment</span>
         </h1>
 
         <div class="percent-display-wrapper">
-            <!-- ZMIANA: Startowa wartość w HTML -->
-            <div id="counter" class="percent-display">32</div>
+            <div id="counter" class="percent-display">70</div>
         </div>
 
         <div class="track">
@@ -283,13 +280,11 @@
         
         <div class="comparison-section">
             <div class="comparison-item initial">
-                <!-- ZMIANA: Rok i wartość -->
-                <span class="label">2024</span>
-                <span id="initial-value" class="value">32%</span>
+                <span class="label">2023</span>
+                <span id="initial-value" class="value">70%</span>
             </div>
             <span id="arrow-icon" class="comparison-arrow">→</span>
             <div class="comparison-item" id="final-item">
-                <!-- ZMIANA: Rok -->
                 <span class="label">2025</span>
                 <span id="final-value" class="value">--</span> 
             </div>
@@ -301,8 +296,8 @@
 
     <script>
         const CONFIG = {
-            start: 32,  // ZMIANA: Start 32%
-            end: 84,    // ZMIANA: Koniec 84%
+            start: 70,
+            end: 99,
             duration: 2200 // ms
         };
 
@@ -346,10 +341,9 @@
             if (isActive) return;
             isActive = true;
             
-            // Przygotowanie do skoku (lekkie cofnięcie)
-            // ZMIANA: Cofnięcie dostosowane do nowej pozycji startowej (32 -> 28)
+            // Przygotowanie do skoku (lekkie cofnięcie, proporcjonalne do 70%)
             beam.style.transition = "width 0.4s cubic-bezier(0.4, 0, 1, 1)";
-            beam.style.width = "28%"; 
+            beam.style.width = "66%"; 
             
             // START WŁAŚCIWY
             setTimeout(() => {
@@ -404,13 +398,12 @@
             counter.innerText = String(CONFIG.end);
             counter.classList.add('is-finished-color');
             
-            // Odbicie końcowe (over-shoot) - lekko powyżej celu
+            // Odbicie końcowe (over-shoot)
             beam.style.transition = "width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)";
             beam.style.width = (CONFIG.end + 0.5) + "%";
-            
             setTimeout(() => { 
                 beam.style.width = CONFIG.end + "%"; 
-                // Po zatrzaśnięciu, finalizujemy stan porównania
+                // Po zatrzaśnięciu, finalizujemy stan 2023 → 2025
                 finalValueDisplay.innerText = `${CONFIG.end}%`;
                 finalItem.classList.add('final');
                 arrowIcon.classList.add('active');
