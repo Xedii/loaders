@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Charging Improvment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6200;    /* ING Orange */
+            --secondary: #1F1F5F;  /* ING Navy Blue */
+            --surface: #F9FAFB;
+            --track: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #FFFFFF; /* jednolite białe tło */
+            color: var(--secondary);
+            overflow: hidden;
+            user-select: none;
+            cursor: default;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* --- MAIN CONTAINER --- */
+        .loader-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 2rem;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- PAGE TITLE --- */
+        .page-title {
+            margin-bottom: 1.5rem;
+            font-size: clamp(1.5rem, 3vw, 2.25rem);
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            text-align: center;
+            color: var(--secondary);
+        }
+
+        .page-title span {
+            color: var(--primary);
+        }
+
+        /* --- TYPOGRAPHY & LABELS --- */
+        .percent-display-wrapper {
+            position: relative;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .percent-display {
+            font-size: clamp(6rem, 15vw, 12rem);
+            font-weight: 700;
+            line-height: 0.8;
+            letter-spacing: -0.05em;
+            font-variant-numeric: tabular-nums;
+            color: var(--primary);  /* numerek pomarańczowy */
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .percent-display::after {
+            content: '%';
+            font-size: clamp(2rem, 5vw, 4rem);
+            margin-left: 0.5rem;
+            color: var(--secondary); /* % niebieski */
+            vertical-align: super;
+            line-height: 1;
+            transform: translateY(10%);
+        }
+        
+        .percent-display.is-finished-color {
+            color: var(--primary);
+        }
+
+        /* "2023 → 2025" SECTION */
+        .comparison-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 2.5rem;
+            opacity: 1;
+            transition: opacity 0.5s;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+
+        .comparison-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .comparison-item.initial .value { color: #6B7280; }
+
+        .comparison-item.final .value { 
+            color: var(--primary); 
+            font-weight: 700; 
+            transform: scale(1.1); 
+        }
+
+        .comparison-item .label {
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #9CA3AF;
+            margin-bottom: 0.25rem;
+        }
+
+        .comparison-item .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--secondary);
+            transition: all 0.5s;
+        }
+
+        .comparison-arrow {
+            font-size: 2rem;
+            color: #CBD5E1;
+            margin: 0 1.5rem;
+            transition: color 0.5s;
+        }
+
+        .comparison-arrow.active { color: var(--primary); }
+
+        /* --- THE TRACK --- */
+        .track {
+            position: relative;
+            height: 4px;
+            width: 100%;
+            background: var(--track);
+            border-radius: 2px;
+            overflow: visible;
+        }
+
+        /* --- THE BEAM (Bar) --- */
+        .beam {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 16px;
+            width: 68%;   /* Startowa szerokość = wartość 2023 */
+            background: var(--secondary);
+            border-radius: 8px;
+            box-shadow: 0 0 0 0 rgba(31, 31, 95, 0);
+            transition: width 0.1s linear, background-color 0.3s;
+            z-index: 2;
+        }
+
+        /* --- GLITCH EFFECT AT START --- */
+        .beam.glitchy {
+            background: repeating-linear-gradient(
+                90deg,
+                var(--secondary),
+                var(--secondary) 10px,
+                var(--primary) 10px,
+                var(--primary) 12px
+            );
+            animation: glitch-anim 2s infinite linear;
+        }
+
+        @keyframes glitch-anim {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 0; }
+        }
+
+        /* --- HEAD OF THE BEAM (The "Engine") --- */
+        .beam-head {
+            position: absolute;
+            right: -2px;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #fff;
+            box-shadow: 0 0 15px 2px var(--primary);
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        /* --- MARKERS --- */
+        .marker {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 20px;
+            background: #CBD5E1;
+            z-index: 1;
+        }
+
+        /* Startowa wartość = 68% (2023) */
+        .marker-start { left: 68%; }
+
+        .marker-end { 
+            right: 0; 
+            height: 30px; 
+            width: 2px; 
+            background: var(--primary); 
+            opacity: 0.5; 
+        }
+
+        /* --- ANIMATION STATES --- */
+        .is-accelerating .beam {
+            height: 8px;
+            border-radius: 0 4px 4px 0;
+            background: var(--primary);
+            box-shadow: 0 0 20px rgba(255, 98, 0, 0.4);
+        }
+
+        .is-accelerating .beam-head { opacity: 1; }
+
+        .is-finished .beam {
+            height: 16px;
+            background: var(--primary);
+            box-shadow: 0 0 30px rgba(255, 98, 0, 0.3);
+        }
+
+        .is-finished .beam-head { opacity: 0; }
+
+        /* --- SHAKE ANIMATION (finish) --- */
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* --- DATA PARTICLES (Bits flying) --- */
+        .data-bit {
+            position: absolute;
+            height: 2px;
+            background: var(--secondary);
+            opacity: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="loader-container">
+        
+        <h1 class="page-title">
+            Travel charging <span>improvment</span>
+        </h1>
+
+        <div class="percent-display-wrapper">
+            <div id="counter" class="percent-display">68</div>
+        </div>
+
+        <div class="track">
+            <div class="marker marker-start"></div>
+            <div class="marker marker-end"></div>
+            
+            <div id="beam" class="beam glitchy">
+                <div class="beam-head"></div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="comparison-item initial">
+                <span class="label">2023</span>
+                <span id="initial-value" class="value">68%</span>
+            </div>
+            <span id="arrow-icon" class="comparison-arrow">→</span>
+            <div class="comparison-item" id="final-item">
+                <span class="label">2025</span>
+                <span id="final-value" class="value">--</span> 
+            </div>
+        </div>
+
+        <div id="particles-layer" class="absolute inset-0 pointer-events-none overflow-hidden h-32 -mt-16"></div>
+
+    </div>
+
+    <script>
+        const CONFIG = {
+            start: 68,
+            end: 100,
+            duration: 2200 // ms
+        };
+
+        let isActive = false;
+        
+        const counter = document.getElementById('counter');
+        const beam = document.getElementById('beam');
+        const initialValueDisplay = document.getElementById('initial-value');
+        const finalValueDisplay = document.getElementById('final-value');
+        const finalItem = document.getElementById('final-item');
+        const arrowIcon = document.getElementById('arrow-icon');
+        const particlesLayer = document.getElementById('particles-layer');
+
+        // Initial setup for comparison section
+        initialValueDisplay.innerText = `${CONFIG.start}%`;
+        finalValueDisplay.innerText = `--`;
+
+        // Funkcja "Scramble" dla tekstu (efekt dekodowania)
+        const chars = "0123456789";
+        function scrambleText(element, finalValue, duration = 300) {
+            let iterations = 0;
+            const scrambleInterval = 50;
+            const totalIterations = duration / scrambleInterval;
+
+            const interval = setInterval(() => {
+                let scrambledText = "";
+                for (let i = 0; i < String(finalValue).length; i++) {
+                    scrambledText += chars[Math.floor(Math.random() * chars.length)];
+                }
+                element.innerText = scrambledText;
+
+                iterations++;
+                if (iterations >= totalIterations) {
+                    clearInterval(interval);
+                    element.innerText = finalValue;
+                }
+            }, scrambleInterval);
+        }
+
+        function startSimulation() {
+            if (isActive) return;
+            isActive = true;
+            
+            // Przygotowanie do skoku (lekkie cofnięcie)
+            beam.style.transition = "width 0.4s cubic-bezier(0.4, 0, 1, 1)";
+            beam.style.width = "64%"; 
+            
+            // START WŁAŚCIWY
+            setTimeout(() => {
+                beam.classList.remove('glitchy');
+                document.body.classList.add('is-accelerating');
+                
+                beam.style.transition = `width ${CONFIG.duration}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+                
+                startProgress();
+                spawnDataStream();
+                
+            }, 400);
+        }
+
+        function startProgress() {
+            const startTime = performance.now();
+            
+            function easeOutExpo(x) {
+                return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+            }
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / CONFIG.duration, 1);
+                
+                const ease = easeOutExpo(progress);
+                const currentVal = CONFIG.start + (ease * (CONFIG.end - CONFIG.start));
+                
+                // Aktualizacja licznika:
+                if ((progress < 0.2 && Math.random() > 0.7) || (progress > 0.8 && progress < 0.9 && Math.random() > 0.6)) {
+                    scrambleText(counter, Math.floor(currentVal), 100); 
+                } else {
+                    counter.innerText = Math.floor(currentVal);
+                }
+
+                beam.style.width = `${currentVal}%`;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    finishSequence();
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        function finishSequence() {
+            document.body.classList.remove('is-accelerating');
+            document.body.classList.add('is-finished');
+            
+            // Ustawiamy sztywno 100 na koniec
+            counter.innerText = String(CONFIG.end);
+            counter.classList.add('is-finished-color');
+            
+            // Odbicie końcowe (over-shoot)
+            beam.style.transition = "width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)";
+            beam.style.width = (CONFIG.end + 0.5) + "%";
+            setTimeout(() => { 
+                beam.style.width = CONFIG.end + "%"; 
+                // Po zatrzaśnięciu, finalizujemy stan 2023 → 2025
+                finalValueDisplay.innerText = `${CONFIG.end}%`;
+                finalItem.classList.add('final');
+                arrowIcon.classList.add('active');
+            }, 300);
+
+            // Efekt końcowy (krótkie potrząśnięcie)
+            document.body.style.animation = 'shake 0.3s cubic-bezier(.36,.07,.19,.97) both';
+            setTimeout(() => document.body.style.animation = 'none', 300);
+        }
+
+        // Generowanie "kresek" prędkości
+        function spawnDataStream() {
+            const interval = setInterval(() => {
+                if (document.body.classList.contains('is-finished')) {
+                    clearInterval(interval);
+                    return;
+                }
+
+                const bit = document.createElement('div');
+                bit.classList.add('data-bit');
+                
+                const width = Math.random() * 60 + 20;
+                const top = Math.random() * 20 - 10; 
+                const color = Math.random() > 0.5 ? 'var(--secondary)' : 'var(--primary)';
+                
+                bit.style.width = width + 'px';
+                bit.style.top = `calc(50% + ${top}px)`;
+                bit.style.left = beam.style.width; 
+                bit.style.backgroundColor = color;
+                
+                particlesLayer.appendChild(bit);
+
+                bit.animate([
+                    { transform: 'translateX(0)', opacity: 0.6 },
+                    { transform: 'translateX(-200px)', opacity: 0 }
+                ], {
+                    duration: 600,
+                    easing: 'linear'
+                }).onfinish = () => bit.remove();
+
+            }, 50); 
+        }
+
+        // Auto-start po 1 sekundzie od załadowania strony
+        window.addEventListener('load', () => {
+            setTimeout(startSimulation, 1000);
+        });
+    </script>
+</body>
+</html>
