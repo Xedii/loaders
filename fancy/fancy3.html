@@ -3,254 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Czysta Animacja 40-100%</title>
+    <title>Growth Accelerator</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --ing-orange: #FF6200;
-            --ing-navy: #1F1F5F;     /* Ciemny granat dla kontrastu na białym */
-            --bg-track: #E5E7EB;     /* Jasnoszary dla tła paska */
+            --ing-navy: #1F1F5F;
+            --track-bg: #F3F4F6;
         }
 
         body {
-            background-color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            user-select: none;
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #FFFFFF;
             color: var(--ing-navy);
-        }
-
-        /* --- LICZNIK --- */
-        .hero-number {
-            font-size: clamp(6rem, 15vw, 16rem);
-            font-weight: 900;
-            line-height: 0.9;
-            letter-spacing: -0.04em;
-            /* Zmiana na ciemny gradient */
-            background: linear-gradient(to bottom, #1F1F5F 40%, #585885 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-variant-numeric: tabular-nums;
-            position: relative;
-        }
-
-        /* Styl po osiągnięciu 100% */
-        .hero-number.success {
-            background: linear-gradient(to bottom right, #FF6200 20%, #FF8F33 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* --- PASEK POSTĘPU --- */
-        .bar-track {
-            background: var(--bg-track);
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
-            border-radius: 20px;
             overflow: hidden;
+            cursor: pointer;
+        }
+
+        /* --- GŁÓWNY KONTENER --- */
+        .loader-stage {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        /* --- TYPOGRAFIA --- */
+        .stat-display {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 1.5rem;
             position: relative;
         }
 
-        .bar-fill {
-            background: linear-gradient(90deg, #FF6200 0%, #FF8F33 50%, #FFB885 100%);
-            box-shadow: 0 0 20px rgba(255, 98, 0, 0.3);
-            border-radius: 20px;
-            height: 100%;
-            position: relative;
-            transform: translateZ(0);
-            width: 40%; /* Startowa wartość */
+        .stat-value {
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            font-variant-numeric: tabular-nums;
+            transition: color 0.3s, transform 0.1s;
         }
-        
-        /* Połysk na pasku */
-        .bar-fill::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-            transform: translateX(-100%);
-            animation: shimmer 2s infinite;
-        }
-        @keyframes shimmer { 100% { transform: translateX(100%); } }
 
-        /* Znacznik startu */
-        .ghost-marker {
+        .stat-unit {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #9CA3AF;
+            margin-left: 0.5rem;
+            transform: translateY(-1rem);
+        }
+
+        .stat-label {
             position: absolute;
+            right: 0;
+            bottom: 10px;
+            text-align: right;
+        }
+
+        .stat-main-text {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--ing-navy);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-sub-text {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-top: 4px;
+        }
+
+        /* --- TUNEL / PASEK --- */
+        .track-container {
+            position: relative;
+            height: 64px;
+            background: var(--track-bg);
+            border-radius: 8px;
+            overflow: visible; /* Zmienione na visible, by etykiety mogły wystawać */
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        /* Linie siatki w tle paska (Grid) */
+        .track-grid {
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background-image: linear-gradient(90deg, rgba(31, 31, 95, 0.05) 1px, transparent 1px);
+            background-size: 40px 100%;
+            opacity: 0.5;
+        }
+
+        /* Wypełnienie (Ciecz/Energia) */
+        .progress-bar {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 40%; /* Start */
+            background: var(--ing-navy);
+            transform-origin: left center;
+            border-radius: 8px 0 0 8px;
+            will-change: width, transform;
+            z-index: 2;
+        }
+
+        /* Głowica (Photon Head) */
+        .progress-head {
+            position: absolute;
+            right: 0;
+            top: 0;
             height: 100%;
-            width: 2px;
-            background: #d1d5db; /* Szary znacznik */
-            border-right: 1px dashed #9ca3af;
+            width: 4px;
+            background: #fff;
+            box-shadow: 0 0 20px 5px var(--ing-orange);
             z-index: 10;
         }
-
-        /* --- EFEKTY KOŃCOWE --- */
-        .confetti {
+        
+        .progress-glow {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: var(--ing-orange);
-            opacity: 0;
+            right: 0; top: 0; bottom: 0;
+            width: 100px;
+            background: linear-gradient(90deg, transparent, var(--ing-orange));
+            opacity: 0.6;
+            mix-blend-mode: overlay;
         }
 
-        .shake-screen { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
-
-        .start-overlay { 
-            color: #9ca3af;
-            transition: opacity 0.5s; 
+        /* --- MARKERY (BYŁO vs JEST) --- */
+        
+        /* Marker startowy (Było X) */
+        .ghost-marker {
+            position: absolute;
+            left: 40%;
+            top: -10px;
+            bottom: -10px;
+            width: 2px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #9CA3AF,
+                #9CA3AF 4px,
+                transparent 4px,
+                transparent 8px
+            );
+            z-index: 1;
+            opacity: 0.5;
         }
+        
+        .ghost-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: #9CA3AF;
+            white-space: nowrap;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Marker końcowy (Jest Y) */
+        .target-marker {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 12px;
+            width: 12px;
+            border: 2px solid #CBD5E1;
+            border-radius: 50%;
+            z-index: 5;
+            transition: all 0.3s;
+        }
+
+        .target-hit {
+            border-color: var(--ing-orange);
+            background: var(--ing-orange);
+            box-shadow: 0 0 0 4px rgba(255, 98, 0, 0.2);
+        }
+
+        /* --- EFEKTY --- */
+        .blur-active { filter: blur(4px) skewX(-10deg); opacity: 0.8; }
+        
+        .text-blur {
+            animation: text-shake 0.8s ease-in-out;
+            color: var(--ing-orange);
+        }
+
+        @keyframes text-shake {
+            0% { transform: translate(0,0); }
+            20% { transform: translate(-2px, 0) skewX(-5deg); filter: blur(1px); }
+            80% { transform: translate(2px, 0) skewX(5deg); filter: blur(1px); }
+            100% { transform: translate(0,0); filter: blur(0); }
+        }
+
+        .spark {
+            position: absolute;
+            background: var(--ing-orange);
+            width: 4px; height: 2px;
+            pointer-events: none;
+            border-radius: 2px;
+        }
+
+        .pulse-finish { animation: finish-pulse 1.5s infinite; }
+        @keyframes finish-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 98, 0, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 98, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 98, 0, 0); }
+        }
+        
+        .instruction-text {
+            position: absolute;
+            bottom: 2rem;
+            width: 100%;
+            text-align: center;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #9CA3AF;
+            animation: pulse-text 2s infinite;
+        }
+        @keyframes pulse-text { 50% { opacity: 0.5; } }
+
     </style>
 </head>
-<body class="h-screen w-screen flex flex-col items-center justify-center relative" onclick="startAnimation()">
+<body class="h-screen w-screen flex flex-col items-center justify-center">
 
-    <div class="w-full max-w-5xl px-6 text-center flex flex-col items-center gap-12 relative z-20">
+    <div class="loader-stage z-10">
         
-        <div class="space-y-2">
-            <h2 class="text-orange-600 font-bold tracking-[0.3em] uppercase text-sm md:text-base">Raport Roczny</h2>
-            <h1 class="text-3xl md:text-5xl text-[#1F1F5F] font-bold tracking-tight">Wzrost Efektywności</h1>
-        </div>
-
-        <div class="w-full flex flex-col items-center">
-            <div class="relative mb-8">
-                <div class="flex items-baseline justify-center">
-                    <span id="counter" class="hero-number">40</span>
-                    <span class="text-4xl md:text-6xl font-bold text-orange-500 ml-2 opacity-100">%</span>
-                </div>
-            </div>
-
-            <div class="w-full h-12 md:h-16 bar-track relative">
-                <div class="ghost-marker" style="left: 40%;">
-                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs text-gray-400 uppercase tracking-wider">Start</div>
-                </div>
-                <div id="bar" class="bar-fill flex items-center justify-end pr-4">
-                    <div class="w-1 h-full bg-white opacity-40"></div>
-                </div>
-            </div>
-
-            <div class="flex justify-between w-full mt-4 px-1 text-gray-400 font-medium text-sm md:text-base h-6">
-                <span>Q1 2024</span>
-                <span id="final-label" class="opacity-0 transition-all duration-1000 text-orange-600 font-bold transform translate-y-2">CEL OSIĄGNIĘTY</span>
+        <!-- Nagłówek z liczbą -->
+        <div class="stat-display">
+            <span id="counter" class="stat-value">40</span>
+            <span class="stat-unit">%</span>
+            <div class="stat-label">
+                <span id="main-label" class="stat-main-text">Wynik Bazowy</span>
+                <span id="sub-label" class="stat-sub-text">Rok 2023</span>
             </div>
         </div>
+
+        <!-- Pasek (Tunel) -->
+        <div class="track-container" id="track">
+            <div class="track-grid"></div>
+            
+            <!-- Marker Startowy (Duch "Przeszłości") -->
+            <div class="ghost-marker">
+                <div class="ghost-label">Poprzednio</div>
+            </div>
+
+            <!-- Marker Końcowy -->
+            <div id="target" class="target-marker"></div>
+
+            <!-- Pasek Postępu -->
+            <div id="bar" class="progress-bar">
+                <div class="progress-glow"></div>
+                <div class="progress-head"></div>
+            </div>
+        </div>
+
     </div>
 
-    <div id="start-msg" class="start-overlay absolute bottom-10 text-sm uppercase tracking-widest animate-pulse cursor-pointer z-50">
-        Kliknij, aby uruchomić
-    </div>
-
-    <div id="particles" class="absolute inset-0 pointer-events-none z-30 overflow-hidden"></div>
+    <div id="instruction" class="instruction-text">Kliknij, aby zoptymalizować wynik</div>
 
     <script>
-        let isAnimating = false;
-        let animationFinished = false;
-
-        const counter = document.getElementById('counter');
-        const bar = document.getElementById('bar');
-        const finalLabel = document.getElementById('final-label');
-        const startMsg = document.getElementById('start-msg');
-
-        // Konfiguracja
         const CONFIG = {
-            startVal: 40,
-            endVal: 100,
-            duration: 2000, // Czas trwania w ms
-            easing: (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t) // Płynne hamowanie (easeOutExpo)
+            start: 40,
+            end: 100,
+            duration: 1600 // Nieco wolniej, żeby nacieszyć oko "wzrostem"
         };
 
-        function startAnimation() {
-            if (isAnimating || animationFinished) return;
-            
-            isAnimating = true;
-            startMsg.style.opacity = '0'; // Ukryj napis "Kliknij"
+        let isAnimating = false;
+        let isFinished = false;
 
+        const bar = document.getElementById('bar');
+        const counter = document.getElementById('counter');
+        const mainLabel = document.getElementById('main-label');
+        const subLabel = document.getElementById('sub-label');
+        const targetMarker = document.getElementById('target');
+        const track = document.getElementById('track');
+        const instruction = document.getElementById('instruction');
+
+        document.body.addEventListener('click', runSequence);
+
+        function runSequence() {
+            if (isAnimating || isFinished) return;
+            isAnimating = true;
+            instruction.style.opacity = 0;
+
+            // KROK 1: Antycypacja (Naciąganie cięciwy)
+            // Zmieniamy tekst na "Analiza..." lub "Przygotowanie"
+            mainLabel.innerText = "Analiza...";
+            subLabel.innerText = "Kalibracja";
+            mainLabel.style.color = "#FF6200";
+            
+            bar.style.transition = "width 0.5s cubic-bezier(0.5, 0, 0.75, 0)";
+            bar.style.width = "35%"; // Cofnięcie
+            counter.style.transform = "scale(0.95)";
+            counter.style.opacity = "0.7"; // Lekkie przygaszenie "starego" wyniku
+            
+            setTimeout(() => {
+                // KROK 2: Wystrzał
+                bar.style.transition = "none";
+                counter.classList.add('text-blur');
+                counter.style.opacity = "1";
+                
+                // Dynamiczna zmiana tekstu w locie
+                mainLabel.innerText = "Optymalizacja";
+                subLabel.innerText = "Przetwarzanie";
+                
+                launchAnimation();
+            }, 500);
+        }
+
+        function launchAnimation() {
             const startTime = performance.now();
+            
+            function easeOutExpo(x) {
+                return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+            }
 
             function update(currentTime) {
                 const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / CONFIG.duration, 1);
-                const easedProgress = CONFIG.easing(progress);
-
-                const currentVal = CONFIG.startVal + (easedProgress * (CONFIG.endVal - CONFIG.startVal));
+                let progress = Math.min(elapsed / CONFIG.duration, 1);
                 
-                // Aktualizacja DOM
-                bar.style.width = `${currentVal}%`;
+                const ease = easeOutExpo(progress);
+                const currentVal = CONFIG.start + (ease * (CONFIG.end - CONFIG.start));
+                
                 counter.innerText = Math.floor(currentVal);
+                bar.style.width = `${currentVal}%`;
+
+                // Efekty cząsteczkowe
+                if (progress < 0.9 && Math.random() > 0.65) {
+                    spawnSpark(bar);
+                }
+
+                // Skew (Pochylenie) zależne od prędkości
+                if (progress > 0.1 && progress < 0.8) {
+                    bar.style.filter = `skewX(${-20 * (1-progress)}deg)`; 
+                } else {
+                    bar.style.filter = `skewX(0deg)`;
+                }
 
                 if (progress < 1) {
                     requestAnimationFrame(update);
                 } else {
-                    finishAnimation();
+                    finalize();
                 }
             }
             requestAnimationFrame(update);
         }
 
-        function finishAnimation() {
+        function finalize() {
+            isFinished = true;
             isAnimating = false;
-            animationFinished = true;
-            
-            // Stan końcowy
-            counter.innerText = "100";
-            counter.classList.add('success'); // Zmiana koloru licznika na pomarańczowy
-            
-            finalLabel.classList.remove('opacity-0', 'translate-y-2'); // Pokaż napis "Cel Osiągnięty"
-            
-            // Efekt potrząśnięcia ekranem
-            document.body.classList.add('shake-screen');
-            setTimeout(() => document.body.classList.remove('shake-screen'), 500);
 
-            spawnConfetti();
+            // KROK 3: Wynik końcowy (Transformacja zakończona)
+            counter.innerText = "100";
+            bar.style.width = "100%";
+            
+            // Zmiana kolorów na sukces
+            bar.style.backgroundColor = "#FF6200"; 
+            counter.classList.remove('text-blur');
+            counter.style.color = "#FF6200";
+            counter.style.transform = "scale(1.1)";
+            
+            // Aktualizacja etykiet na "NOWE"
+            mainLabel.innerText = "Nowy Standard";
+            mainLabel.style.color = "#1F1F5F";
+            subLabel.innerText = "Rok 2024";
+            subLabel.style.color = "#FF6200"; // Podkreślenie roku kolorem
+
+            // Efekty UI
+            targetMarker.classList.add('target-hit');
+            track.classList.add('pulse-finish');
+            
+            // Błysk
+            const flash = document.createElement('div');
+            flash.className = 'absolute inset-0 bg-white pointer-events-none';
+            flash.style.opacity = 0.5;
+            flash.style.transition = 'opacity 0.6s';
+            document.body.appendChild(flash);
+            
+            requestAnimationFrame(() => {
+                flash.style.opacity = 0;
+                setTimeout(() => flash.remove(), 600);
+            });
         }
 
-        function spawnConfetti() {
-            const container = document.getElementById('particles');
-            const count = 150;
-            // Kolory dostosowane do białego tła (brak białego konfetti)
-            const colors = ['#FF6200', '#1F1F5F', '#FF9E4D', '#cbd5e1']; 
+        function spawnSpark(parentElement) {
+            const rect = parentElement.getBoundingClientRect();
+            const spark = document.createElement('div');
+            spark.classList.add('spark');
+            document.body.appendChild(spark);
+
+            const startX = rect.right;
+            const startY = rect.top + (Math.random() * rect.height);
+
+            spark.style.left = `${startX}px`;
+            spark.style.top = `${startY}px`;
             
-            const barRect = bar.getBoundingClientRect();
-            const originX = barRect.right; // Wylatują z końca paska
-            const originY = barRect.top + (barRect.height / 2);
+            const velocity = 20 + Math.random() * 30;
 
-            for (let i = 0; i < count; i++) {
-                const p = document.createElement('div');
-                p.classList.add('confetti');
-                const bg = colors[Math.floor(Math.random() * colors.length)];
-                const size = Math.random() * 8 + 4;
-                const angle = Math.random() * Math.PI * 2;
-                const velocity = Math.random() * 20 + 10; 
-                
-                p.style.backgroundColor = bg;
-                p.style.width = `${size}px`;
-                p.style.height = `${size}px`;
-                p.style.left = `${originX}px`;
-                p.style.top = `${originY}px`;
-                p.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-                
-                container.appendChild(p);
+            const anim = spark.animate([
+                { transform: 'translate(0,0) scale(1)', opacity: 0.8 },
+                { transform: `translate(-${velocity * 2}px, ${(Math.random()-0.5)*20}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 400,
+                easing: 'ease-out'
+            });
 
-                let x = 0, y = 0;
-                let vx = Math.cos(angle) * velocity;
-                let vy = Math.sin(angle) * velocity;
-                const gravity = 0.6;
-                const friction = 0.92;
-                let opacity = 1;
-
-                const anim = () => {
-                    vx *= friction; 
-                    vy *= friction; 
-                    vy += gravity;
-                    x += vx; 
-                    y += vy; 
-                    opacity -= 0.01; // Szybsze znikanie
-
-                    p.style.transform = `translate(${x}px, ${y}px) rotate(${x * 10}deg)`;
-                    p.style.opacity = opacity;
-
-                    if (opacity > 0) requestAnimationFrame(anim); 
-                    else p.remove();
-                };
-                requestAnimationFrame(anim);
-            }
+            anim.onfinish = () => spark.remove();
         }
     </script>
 </body>

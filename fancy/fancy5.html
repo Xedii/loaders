@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ING Liquid Momentum - Smooth Fix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6200;   /* ING Orange */
+            --secondary: #1F1F5F; /* ING Navy */
+            --bg-color: #FFFFFF;
+            --track-grey: #F3F4F6;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--secondary);
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* --- FILTR "GOOEY" --- */
+        .filter-container {
+            filter: url('#goo');
+            padding: 40px;
+            margin: -40px;
+            position: relative;
+            z-index: 10;
+            width: 100%;
+        }
+
+        /* --- GŁÓWNY OBSZAR ROBOCZY (Relatywny dla pozycjonowania) --- */
+        .loader-area {
+            position: relative;
+            width: 100%;
+            height: 100px; /* Miejsce na tekst i pasek */
+            display: flex;
+            align-items: center;
+        }
+
+        /* --- PASEK (TRACK) --- */
+        .track-wrapper {
+            position: absolute;
+            left: 0; 
+            right: 0;
+            bottom: 0; /* Pasek na dole kontenera */
+            height: 24px;
+            background: var(--track-grey);
+            border-radius: 999px;
+            z-index: 0;
+        }
+
+        /* Płynna część paska */
+        .liquid-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: var(--primary);
+            border-radius: 999px;
+            width: 40%; /* Startowa szerokość */
+            will-change: width;
+            /* Brak transition w CSS - sterujemy tym w pełni w JS dla synchronizacji */
+        }
+
+        /* Głowica cieczy */
+        .liquid-head {
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        /* --- PŁYWAJĄCY TEKST (To naprawiliśmy) --- */
+        .floating-counter-wrapper {
+            position: absolute;
+            bottom: 40px; /* Nad paskiem */
+            left: 40%; /* Startowa pozycja zgodna z paskiem */
+            transform: translateX(-100%); /* Zakotwiczamy prawą krawędź tekstu do końca paska */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end; /* Tekst wyrównany do prawej (do czoła fali) */
+            padding-right: 10px; /* Odstęp od głowicy */
+            white-space: nowrap;
+            will-change: left; /* Optymalizacja dla przeglądarki */
+            z-index: 20;
+        }
+
+        .hero-counter {
+            font-size: 6rem;
+            font-weight: 700;
+            line-height: 0.8;
+            letter-spacing: -0.06em;
+            color: var(--secondary);
+            font-variant-numeric: tabular-nums;
+            transform-origin: bottom right; /* Skew względem prawej strony */
+            transition: color 0.3s;
+        }
+
+        .hero-counter span {
+            font-size: 2rem;
+            color: var(--primary);
+            vertical-align: super;
+            margin-left: 4px;
+        }
+
+        .status-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #9CA3AF;
+            margin-top: 4px;
+            font-weight: 500;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        /* Kropelki */
+        .droplet {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Instrukcja na dole */
+        .click-hint {
+            position: absolute;
+            bottom: 3rem;
+            opacity: 0.4;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            animation: pulse 2s infinite;
+            width: 100%;
+            text-align: center;
+        }
+        @keyframes pulse { 50% { opacity: 0.8; } }
+
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col items-center justify-center relative">
+
+    <svg style="visibility: hidden; position: absolute;" width="0" height="0">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
+                <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="w-full max-w-5xl px-8 md:px-16 relative z-20">
+        
+        <div class="loader-area">
+            
+            <div id="text-wrapper" class="floating-counter-wrapper">
+                <div id="counter" class="hero-counter">40<span>%</span></div>
+                <div id="label-text" class="status-label">Status Q3</div>
+            </div>
+
+            <div class="filter-container">
+                <div class="track-wrapper">
+                    <div id="liquid-bar" class="liquid-bar">
+                        <div class="liquid-head"></div>
+                    </div>
+                    <div id="droplets-layer" class="absolute inset-0 pointer-events-none"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="hint" class="click-hint">KLIKNIJ, ABY ZWIĘKSZYĆ EFEKTYWNOŚĆ</div>
+
+    <script>
+        const bar = document.getElementById('liquid-bar');
+        const textWrapper = document.getElementById('text-wrapper');
+        const counter = document.getElementById('counter');
+        const labelText = document.getElementById('label-text');
+        const hint = document.getElementById('hint');
+        const dropletsLayer = document.getElementById('droplets-layer');
+
+        let isActive = false;
+        let isFinished = false;
+
+        const CONFIG = {
+            start: 40,
+            end: 100,
+            duration: 1800
+        };
+
+        document.body.addEventListener('click', runSequence);
+
+        function runSequence() {
+            if (isActive || isFinished) return;
+            isActive = true;
+            
+            // Ukryj hint
+            hint.style.opacity = 0;
+
+            // --- FAZA 1: ANTICIPATION (Cofnięcie) ---
+            // Czas trwania cofnięcia
+            const anticipationTime = 500;
+            const startWithdrawal = performance.now();
+
+            function animateWithdrawal(time) {
+                let progress = (time - startWithdrawal) / anticipationTime;
+                if (progress > 1) progress = 1;
+
+                // Easing typu "ease-out" dla cofnięcia
+                const ease = 1 - Math.pow(1 - progress, 3);
+                
+                // Cofa się z 40% do 35%
+                const currentPos = 40 - (ease * 5);
+                
+                updatePositions(currentPos);
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateWithdrawal);
+                } else {
+                    // Po cofnięciu -> FAZA 2: WYSTRZAŁ
+                    labelText.innerText = "Optymalizacja...";
+                    labelText.style.color = "#FF6200";
+                    launchGrowth();
+                }
+            }
+            requestAnimationFrame(animateWithdrawal);
+        }
+
+        function launchGrowth() {
+            const startTime = performance.now();
+            
+            // Spawn kropelek na starcie
+            spawnDroplets();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / CONFIG.duration, 1);
+
+                // Easing: EaseInOutExpo + lekki overshoot pod koniec
+                // Zmodyfikowana krzywa Beziera w JS
+                function easeInOutQuart(x) {
+                    return x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
+                }
+                
+                const ease = easeInOutQuart(progress);
+                
+                // Obliczamy aktualną wartość (startujemy od 35% bo tam się cofnęliśmy)
+                const currentVal = 35 + (ease * (CONFIG.end - 35));
+
+                // Aktualizacja DOM (Synchronizacja pozycji tekstu i paska)
+                // Obliczamy podłogę dla licznika, ale pozycję trzymamy float dla płynności
+                counter.firstChild.nodeValue = Math.floor(currentVal);
+                
+                updatePositions(currentVal);
+
+                // Skew tekstu (Im szybciej, tym większe pochylenie)
+                // Pochylamy w lewo (-deg), żeby wyglądało, że pęd ciągnie górę cyfr do tyłu
+                // Maksymalna prędkość jest w środku animacji (około progress 0.5)
+                const velocity = Math.sin(progress * Math.PI); 
+                const skewAmount = velocity * -15; 
+                counter.style.transform = `skewX(${skewAmount}deg)`;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    finalize();
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        // Główna funkcja synchronizująca pozycje
+        function updatePositions(percentage) {
+            // Ogranicznik, żeby nie wyjechało za 100%
+            const clamped = Math.min(percentage, 100);
+            
+            bar.style.width = `${clamped}%`;
+            textWrapper.style.left = `${clamped}%`;
+        }
+
+        function finalize() {
+            isFinished = true;
+            
+            // Sztywne ustawienie końca
+            updatePositions(100);
+            counter.firstChild.nodeValue = "100";
+            counter.style.transform = "skewX(0deg)"; // Wyprostowanie
+            
+            // Zmiana stylu na sukces
+            labelText.innerText = "Cel Osiągnięty";
+            labelText.style.color = "#1F1F5F";
+            counter.style.color = "#FF6200"; // Pomarańczowe 100%
+
+            // Efekt uderzenia (Shake całego body)
+            document.body.animate([
+                { transform: 'translateX(0)' },
+                { transform: 'translateX(-4px)' },
+                { transform: 'translateX(4px)' },
+                { transform: 'translateX(0)' }
+            ], { duration: 300 });
+        }
+
+        function spawnDroplets() {
+            // Generujemy kropelki, które wylatują z czoła (ok. 35-40%) w prawo
+            const count = 6;
+            for(let i=0; i<count; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('droplet');
+                
+                // Różne rozmiary
+                const size = 8 + Math.random() * 15;
+                drop.style.width = `${size}px`;
+                drop.style.height = `${size}px`;
+                
+                // Startują tam, gdzie aktualnie jest czoło (ok. 35%)
+                drop.style.left = "35%"; 
+                drop.style.top = "50%";
+                drop.style.transform = "translateY(-50%)";
+
+                dropletsLayer.appendChild(drop);
+
+                // Losowa odległość lotu
+                const distance = 150 + Math.random() * 250;
+                const duration = 600 + Math.random() * 400;
+
+                drop.animate([
+                    { transform: 'translate(0, -50%) scale(1)', opacity: 1 },
+                    { transform: `translate(${distance}px, -50%) scale(0)`, opacity: 0 }
+                ], {
+                    duration: duration,
+                    easing: 'cubic-bezier(0, .71, .2, 1)'
+                }).onfinish = () => drop.remove();
+            }
+        }
+    </script>
+</body>
+</html>
