@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ING Kinetic Reveal - White</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6200;      /* ING Orange */
+            --secondary: #1F1F5F;    /* ING Navy Blue */
+            --bg-color: #FFFFFF;     /* Czysta biel */
+            --track-color: #E5E7EB;  /* Jasnoszary pasek tła */
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--secondary);
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+
+        /* --- TURBINA --- */
+        .turbine-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ring {
+            transform-origin: 50% 50%;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .ring-idle { animation: breathe 3s ease-in-out infinite; }
+        .ring-active { animation: spin-accelerate 2s cubic-bezier(0.6, 0, 0.2, 1) forwards; }
+
+        /* --- TEKSTY --- */
+        .hero-number {
+            font-size: 6rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            color: var(--secondary);
+            font-variant-numeric: tabular-nums;
+            transition: color 0.3s;
+        }
+
+        .hero-number.charged {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .label-text {
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #9ca3af;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* --- NARRACJA (START -> KONIEC) --- */
+        .narrative-box {
+            position: absolute;
+            bottom: 20%;
+            text-align: center;
+            transition: all 0.5s ease;
+        }
+        
+        .narrative-sub {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #9ca3af;
+            margin-bottom: 0.25rem;
+        }
+
+        .narrative-main {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        /* --- EFEKTY --- */
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .implosion-particle {
+            width: 3px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--primary), transparent);
+            opacity: 0;
+        }
+
+        .shockwave-circle {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .shockwave-active { animation: shockwave 0.8s ease-out forwards; }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.02) rotate(5deg); opacity: 0.8; }
+        }
+
+        @keyframes spin-accelerate {
+            0% { transform: rotate(0deg) scale(1); }
+            60% { transform: rotate(360deg) scale(0.9); }
+            80% { transform: rotate(720deg) scale(0.85); opacity: 1; }
+            100% { transform: rotate(1080deg) scale(1.2); opacity: 0; }
+        }
+
+        @keyframes shockwave {
+            0% { transform: scale(0.5); opacity: 1; border-width: 40px; }
+            100% { transform: scale(2.5); opacity: 0; border-width: 0px; }
+        }
+
+        .ui-hidden { opacity: 0; pointer-events: none; }
+        .ui-fade { transition: opacity 0.5s; }
+
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col items-center justify-center relative">
+
+    <!-- TŁO DEKORACYJNE (Subtelne szare kropki na bieli) -->
+    <div class="absolute inset-0 z-0 opacity-30">
+        <svg width="100%" height="100%">
+            <pattern id="dot-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="1.5" fill="#CBD5E1"></circle>
+            </pattern>
+            <rect width="100%" height="100%" fill="url(#dot-pattern)"></rect>
+        </svg>
+    </div>
+
+    <!-- GŁÓWNA SCENA -->
+    <div class="relative z-10 flex flex-col items-center justify-center w-full h-full">
+        
+        <div class="turbine-container" id="turbine">
+            <!-- Dekoracyjny pierścień zewnętrzny -->
+            <svg class="absolute w-[130%] h-[130%] text-gray-200 animate-[spin_30s_linear_infinite]" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="49" stroke="currentColor" stroke-width="0.5" fill="none" stroke-dasharray="8 4" />
+            </svg>
+
+            <!-- Pierścień Główny -->
+            <svg class="absolute w-full h-full ring ring-idle" id="ring-main" viewBox="0 0 100 100" style="color: var(--primary);">
+                <!-- Tło paska (szare) -->
+                <circle cx="50" cy="50" r="45" stroke="var(--track-color)" stroke-width="4" fill="none" />
+                
+                <!-- Pasek postępu (pomarańczowy) -->
+                <circle id="progress-stroke" cx="50" cy="50" r="45" 
+                        stroke="currentColor" 
+                        stroke-width="4" 
+                        fill="none" 
+                        stroke-linecap="round"
+                        stroke-dasharray="283" 
+                        stroke-dashoffset="170" 
+                        class="transition-all duration-1000 ease-out" />
+            </svg>
+
+            <!-- Wewnętrzny pierścień techniczny (Granatowy) -->
+            <svg class="absolute w-[75%] h-[75%] text-[#1F1F5F] opacity-10 ring ring-idle" style="animation-direction: reverse;" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="2 8" />
+            </svg>
+
+            <!-- Fala uderzeniowa -->
+            <div id="shockwave-1" class="shockwave-circle"></div>
+            <div id="shockwave-2" class="shockwave-circle" style="animation-delay: 0.15s"></div>
+
+            <!-- LICZNIK -->
+            <div class="absolute z-10 text-center flex flex-col items-center">
+                <div class="flex items-start">
+                    <span id="counter" class="hero-number">40</span>
+                    <span class="text-4xl font-bold text-orange-500 mt-3 ml-1">%</span>
+                </div>
+                <div id="status-label" class="label-text tracking-widest">Efektywność</div>
+            </div>
+        </div>
+
+        <!-- NARRACJA CZASOWA (Dół) -->
+        <div id="narrative-box" class="narrative-box ui-fade">
+            <p id="narrative-sub" class="narrative-sub">Punkt Startowy</p>
+            <h3 id="narrative-main" class="narrative-main">Q1 2024</h3>
+        </div>
+
+        <!-- INSTRUKCJA -->
+        <div id="instruction" class="absolute bottom-10 text-gray-400 uppercase tracking-widest text-xs animate-bounce ui-fade">
+            Kliknij, aby zobaczyć wynik
+        </div>
+
+        <!-- KONTENER CZĄSTECZEK -->
+        <div id="particles-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+
+    </div>
+
+    <script>
+        let isActive = false;
+        let isFinished = false;
+        
+        // Elementy DOM
+        const progressStroke = document.getElementById('progress-stroke');
+        const counter = document.getElementById('counter');
+        const label = document.getElementById('status-label');
+        const instruction = document.getElementById('instruction');
+        const narrativeSub = document.getElementById('narrative-sub');
+        const narrativeMain = document.getElementById('narrative-main');
+        const container = document.getElementById('particles-container');
+
+        document.body.addEventListener('click', startSequence);
+
+        function startSequence() {
+            if (isActive || isFinished) return;
+            isActive = true;
+
+            // 1. Ukryj instrukcję
+            instruction.classList.add('ui-hidden');
+            
+            // 2. Aktywuj turbiny (Wind-up)
+            const rings = document.querySelectorAll('.ring');
+            rings.forEach(r => {
+                r.classList.remove('ring-idle');
+                r.classList.add('ring-active');
+            });
+
+            // 3. Cząsteczki wlatujące (Implozja)
+            spawnImplosionParticles();
+
+            // 4. Start licznika
+            setTimeout(() => {
+                animateCounter(40, 100, 1500);
+            }, 300);
+
+            // 5. Zmiana narracji w trakcie
+            setTimeout(() => {
+                narrativeSub.style.opacity = 0;
+                narrativeMain.style.opacity = 0;
+            }, 500);
+
+            // 6. FINAŁ (Wybuch)
+            setTimeout(() => {
+                triggerExplosion();
+            }, 1800);
+        }
+
+        function animateCounter(start, end, duration) {
+            const startTime = performance.now();
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                
+                const currentVal = Math.floor(start + (ease * (end - start)));
+                counter.innerText = currentVal;
+
+                // Aktualizacja paska (Obwód = 283)
+                const maxOffset = 283;
+                const targetOffset = maxOffset - (maxOffset * (currentVal / 100));
+                progressStroke.style.strokeDashoffset = targetOffset;
+
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        function triggerExplosion() {
+            isFinished = true;
+            
+            // Zmiana stylów licznika
+            counter.innerText = "100";
+            counter.classList.add('charged');
+            label.innerText = "Cel Osiągnięty";
+            label.style.color = "#FF6200";
+
+            // Zmiana tekstów narracyjnych (pojawiają się nowe)
+            narrativeSub.innerText = "Stan Docelowy";
+            narrativeMain.innerText = "Q4 2024";
+            narrativeMain.style.color = "#FF6200"; // Pomarańczowy tekst na koniec
+            
+            narrativeSub.style.opacity = 1;
+            narrativeMain.style.opacity = 1;
+
+            // Fale uderzeniowe
+            document.getElementById('shockwave-1').classList.add('shockwave-active');
+            document.getElementById('shockwave-2').classList.add('shockwave-active');
+
+            // Wycofanie pierścieni (clean up view)
+            const rings = document.querySelectorAll('.ring');
+            rings.forEach(r => {
+                r.style.animation = 'none';
+                r.style.transform = 'scale(1) rotate(0deg)';
+                r.style.opacity = '0.1'; 
+            });
+            // Główny pasek zostaje wyraźny
+            progressStroke.style.opacity = '1';
+            
+            spawnExplosionParticles();
+        }
+
+        function spawnImplosionParticles() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            for (let i = 0; i < 40; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle', 'implosion-particle');
+                container.appendChild(p);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const radius = 300 + Math.random() * 100;
+                const startX = centerX + Math.cos(angle) * radius;
+                const startY = centerY + Math.sin(angle) * radius;
+
+                p.style.left = `${startX}px`;
+                p.style.top = `${startY}px`;
+                p.style.transform = `rotate(${angle + Math.PI/2}rad)`;
+                
+                p.animate([
+                    { opacity: 0, transform: `translate(0,0) rotate(${angle + Math.PI/2}rad) scaleY(1)` },
+                    { opacity: 1, offset: 0.3 },
+                    { opacity: 0, transform: `translate(${-Math.cos(angle)*radius}px, ${-Math.sin(angle)*radius}px) rotate(${angle + Math.PI/2}rad) scaleY(3)` }
+                ], { duration: 800 + Math.random()*400, easing: 'ease-in', fill: 'forwards' }).onfinish = () => p.remove();
+            }
+        }
+
+        function spawnExplosionParticles() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const colors = ['#FF6200', '#1F1F5F', '#FF9E4D']; // Pomarańcz i Granat (Kontrast na bieli)
+
+            for (let i = 0; i < 100; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                container.appendChild(p);
+
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 60 + Math.random() * 140;
+                const size = 4 + Math.random() * 5;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+
+                p.style.width = `${size}px`;
+                p.style.height = `${size}px`;
+                p.style.backgroundColor = color;
+                p.style.left = `${centerX}px`;
+                p.style.top = `${centerY}px`;
+
+                p.animate([
+                    { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                    { transform: `translate(${Math.cos(angle)*velocity*1.5}px, ${Math.sin(angle)*velocity*1.5}px) scale(0)`, opacity: 0 }
+                ], { duration: 600 + Math.random() * 600, easing: 'cubic-bezier(0, .9, .57, 1)' }).onfinish = () => p.remove();
+            }
+        }
+    </script>
+</body>
+</html>
