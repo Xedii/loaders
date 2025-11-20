@@ -552,6 +552,236 @@
             75% { transform: scale(1.2) rotate(-5deg); }
         }
 
+        /* Loader 6: Magnetic Reveal */
+        .loader-magnetic-reveal {
+            height: 2.5rem;
+            background: var(--ing-bg-tertiary);
+            border-radius: 9999px;
+            overflow: visible;
+            position: relative;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .loader-magnetic-reveal .fill {
+            height: 100%;
+            background: linear-gradient(90deg,
+                var(--ing-orange) 0%,
+                var(--ing-orange-hover) 100%);
+            border-radius: 9999px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow:
+                0 0 15px rgba(255, 98, 0, 0.4),
+                inset 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Magnetyczny punkt na końcu */
+        .loader-magnetic-reveal .magnetic-core {
+            position: absolute;
+            top: 50%;
+            right: -8px;
+            width: 16px;
+            height: 16px;
+            background: radial-gradient(circle, #fff 0%, var(--ing-orange) 50%, var(--ing-orange-hover) 100%);
+            border-radius: 50%;
+            transform: translateY(-50%);
+            box-shadow:
+                0 0 20px rgba(255, 98, 0, 0.8),
+                0 0 40px rgba(255, 98, 0, 0.5),
+                0 0 60px rgba(255, 98, 0, 0.3);
+            animation: magneticPulse 1.5s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        /* Pole magnetyczne (ring pulsujący) */
+        .loader-magnetic-reveal .magnetic-core::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            border: 2px solid rgba(255, 98, 0, 0.4);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: fieldPulse 1.5s ease-in-out infinite;
+        }
+
+        .loader-magnetic-reveal .magnetic-core::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            border: 1px solid rgba(255, 98, 0, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: fieldPulse 1.5s ease-in-out infinite 0.75s;
+        }
+
+        /* Kontener dla przyciąganych cząstek */
+        .loader-magnetic-reveal .magnetic-particles {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            width: 100%;
+            height: calc(100% + 80px);
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        /* Pojedyncze cząsteczki */
+        .loader-magnetic-reveal .mag-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--ing-orange);
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 6px rgba(255, 98, 0, 0.8);
+        }
+
+        /* Górne cząsteczki - spadające */
+        .loader-magnetic-reveal .mag-particle.top {
+            animation: magneticPullTop 2s ease-in infinite;
+        }
+
+        .loader-magnetic-reveal .mag-particle.top:nth-child(1) { left: 15%; animation-delay: 0s; }
+        .loader-magnetic-reveal .mag-particle.top:nth-child(2) { left: 35%; animation-delay: 0.3s; }
+        .loader-magnetic-reveal .mag-particle.top:nth-child(3) { left: 55%; animation-delay: 0.6s; }
+        .loader-magnetic-reveal .mag-particle.top:nth-child(4) { left: 75%; animation-delay: 0.9s; }
+        .loader-magnetic-reveal .mag-particle.top:nth-child(5) { left: 90%; animation-delay: 1.2s; }
+
+        /* Dolne cząsteczki - podciągane */
+        .loader-magnetic-reveal .mag-particle.bottom {
+            animation: magneticPullBottom 2s ease-in infinite;
+        }
+
+        .loader-magnetic-reveal .mag-particle.bottom:nth-child(6) { left: 20%; animation-delay: 0.15s; }
+        .loader-magnetic-reveal .mag-particle.bottom:nth-child(7) { left: 40%; animation-delay: 0.45s; }
+        .loader-magnetic-reveal .mag-particle.bottom:nth-child(8) { left: 60%; animation-delay: 0.75s; }
+        .loader-magnetic-reveal .mag-particle.bottom:nth-child(9) { left: 80%; animation-delay: 1.05s; }
+        .loader-magnetic-reveal .mag-particle.bottom:nth-child(10) { left: 95%; animation-delay: 1.35s; }
+
+        /* Iskry wzdłuż paska */
+        .loader-magnetic-reveal .spark {
+            position: absolute;
+            width: 2px;
+            height: 8px;
+            background: linear-gradient(to bottom, #fff, transparent);
+            top: 50%;
+            opacity: 0;
+            animation: sparkTravel 1.5s linear infinite;
+        }
+
+        .loader-magnetic-reveal .spark:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .loader-magnetic-reveal .spark:nth-child(2) { left: 30%; animation-delay: 0.3s; }
+        .loader-magnetic-reveal .spark:nth-child(3) { left: 50%; animation-delay: 0.6s; }
+        .loader-magnetic-reveal .spark:nth-child(4) { left: 70%; animation-delay: 0.9s; }
+        .loader-magnetic-reveal .spark:nth-child(5) { left: 90%; animation-delay: 1.2s; }
+
+        @keyframes magneticPulse {
+            0%, 100% {
+                transform: translateY(-50%) scale(1);
+                box-shadow:
+                    0 0 20px rgba(255, 98, 0, 0.8),
+                    0 0 40px rgba(255, 98, 0, 0.5),
+                    0 0 60px rgba(255, 98, 0, 0.3);
+            }
+            50% {
+                transform: translateY(-50%) scale(1.3);
+                box-shadow:
+                    0 0 30px rgba(255, 98, 0, 1),
+                    0 0 60px rgba(255, 98, 0, 0.7),
+                    0 0 90px rgba(255, 98, 0, 0.5);
+            }
+        }
+
+        @keyframes fieldPulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes magneticPullTop {
+            0% {
+                top: -40px;
+                opacity: 0;
+                transform: translateX(0) scale(0);
+            }
+            15% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                top: 50%;
+                opacity: 1;
+                transform: translateX(10px) scale(1.2);
+            }
+            70% {
+                opacity: 0.8;
+                transform: translateX(15px) scale(0.8);
+            }
+            100% {
+                top: 50%;
+                opacity: 0;
+                transform: translateX(20px) scale(0);
+            }
+        }
+
+        @keyframes magneticPullBottom {
+            0% {
+                top: calc(100% + 40px);
+                opacity: 0;
+                transform: translateX(0) scale(0);
+            }
+            15% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                top: 50%;
+                opacity: 1;
+                transform: translateX(10px) scale(1.2);
+            }
+            70% {
+                opacity: 0.8;
+                transform: translateX(15px) scale(0.8);
+            }
+            100% {
+                top: 50%;
+                opacity: 0;
+                transform: translateX(20px) scale(0);
+            }
+        }
+
+        @keyframes sparkTravel {
+            0% {
+                opacity: 0;
+                transform: translateY(-50%) rotate(-45deg) translateX(0);
+            }
+            30% {
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50%) rotate(-45deg) translateX(20px);
+            }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             body {
@@ -580,7 +810,7 @@
 <body>
     <div class="container">
         <h1>🎯 ING Premium Progress Loaders</h1>
-        <p class="subtitle">Horizontal Progress Bars - Od 40% do 100% (Osiągnięcie Celu)</p>
+        <p class="subtitle">6 Horizontal Progress Bars - Od 40% do 100% (Osiągnięcie Celu)</p>
 
         <div class="control-panel">
             <div class="control-group">
@@ -699,6 +929,51 @@
                 </div>
             </div>
         </div>
+
+        <!-- Loader 6: Magnetic Reveal -->
+        <div class="loader-section">
+            <h2 class="loader-title">6. Magnetic Reveal ⚡</h2>
+            <p class="loader-description">
+                Innowacyjny efekt magnetyczny - cząsteczki energii są przyciągane z góry i dołu do paska postępu. Pulsujące pole elektromagnetyczne tworzy dynamiczną wizualizację przepływu energii.
+            </p>
+            <div class="loader-wrapper">
+                <div class="progress-label">
+                    <span>Start (40%)</span>
+                    <span class="current" id="label6">40%</span>
+                    <span>Cel (100%)</span>
+                </div>
+                <div class="loader-magnetic-reveal" style="margin: 50px 0;">
+                    <div class="fill" id="loader6">
+                        <!-- Magnetyczny rdzeń na końcu paska -->
+                        <div class="magnetic-core"></div>
+
+                        <!-- Iskry wzdłuż paska -->
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                    </div>
+
+                    <!-- Cząsteczki magnetyczne -->
+                    <div class="magnetic-particles">
+                        <!-- Górne cząsteczki -->
+                        <div class="mag-particle top"></div>
+                        <div class="mag-particle top"></div>
+                        <div class="mag-particle top"></div>
+                        <div class="mag-particle top"></div>
+                        <div class="mag-particle top"></div>
+
+                        <!-- Dolne cząsteczki -->
+                        <div class="mag-particle bottom"></div>
+                        <div class="mag-particle bottom"></div>
+                        <div class="mag-particle bottom"></div>
+                        <div class="mag-particle bottom"></div>
+                        <div class="mag-particle bottom"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -711,7 +986,8 @@
             document.getElementById('loader2'),
             document.getElementById('loader3'),
             document.getElementById('loader4'),
-            document.getElementById('loader5')
+            document.getElementById('loader5'),
+            document.getElementById('loader6')
         ];
 
         const labels = [
@@ -719,7 +995,8 @@
             document.getElementById('label2'),
             document.getElementById('label3'),
             document.getElementById('label4'),
-            document.getElementById('label5')
+            document.getElementById('label5'),
+            document.getElementById('label6')
         ];
 
         let previousValue = 40;
